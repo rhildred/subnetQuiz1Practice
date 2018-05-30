@@ -1,0 +1,91 @@
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+    <script>
+        angular.module('calcApp', [])
+
+            .controller('calcCtrl', function ($scope) {
+                $scope.fInit = function(){
+                    $scope.nOctet1 = Math.floor(Math.random() * (223-128)) + 128;
+                    $scope.nOctet2 = Math.floor(Math.random() * 255);
+                    $scope.nOctet3 = Math.floor(Math.random() * 255);
+                    $scope.nOctet4 = Math.floor(Math.random() * 255);
+                    $scope.nMask3 = 255;
+                    $scope.nMask4 = 0;
+                    $scope.nBorrowed = Math.ceil(Math.random()*4);
+                    if($scope.nOctet1 < 192){
+                        $scope.nBorrowed = Math.ceil(Math.random()*2) + 5;
+                        $scope.nMask3 = 0;
+                        for(var n = 0; n < $scope.nBorrowed; n++){
+                            $scope.nMask3 += Math.pow(2, 7 - n);
+                        }
+                    }else{
+                        for(var n = 0; n < $scope.nBorrowed; n++){
+                            $scope.nMask4 += Math.pow(2, 7 - n);
+                        }
+                        
+                    }
+                    $scope.sNetwork = $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + $scope.nOctet4;
+                    $scope.sMask = "255.255." + $scope.nMask3 + "." + $scope.nMask4;
+
+                }
+                $scope.fInit();
+            });
+
+    </script>
+
+</head>
+
+<body ng-app="calcApp" ng-controller="calcCtrl">
+    <form class="container">
+        <p>For the following Network address and conditions, calculate the information listed below.</p>
+
+
+        <p style="text-indent: 2em">Network: {{sNetwork}} Subnet Mask: {{sMask}}</p>
+
+        <div class="form-group">
+            <label for="defaultNetMask">Default Subnet Mask</label>
+            <input class="form-control" id="defaultNetMask" placeholder="255.255.255.255" aria-describedby="defaultNetMaskHelp">
+            <small id="defaultNetMaskHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+        </div>
+        <div class="form-group">
+            <label for="subnetAddress">Subnet Address</label>
+            <input class="form-control" id="subnetAddress" placeholder="0.0.0.0" aria-describedby="subnetAddressHelp">
+            <small id="subnetAddressHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+        </div>
+        <div class="form-group">
+            <label for="firstHostAddress">First Usable Host Address</label>
+            <input class="form-control" id="firstHostAddress" placeholder="0.0.0.0" aria-describedby="firstHostAddressHelp">
+            <small id="firstHostAddressHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+        </div>
+        <div class="form-group">
+            <label for="lastHostAddress">Last Usable Host Address</label>
+            <input class="form-control" id="lastHostAddress" placeholder="0.0.0.0" aria-describedby="lastHostAddressHelp">
+            <small id="lastHostAddressHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+        </div>
+        <div class="form-group">
+            <label for="broadcastAddress">Broadcast Address</label>
+            <input class="form-control" id="broadcastAddress" placeholder="0.0.0.0" aria-describedby="broadcastAddressHelp">
+            <small id="broadcastAddressHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+        </div>
+        <div class="form-group">
+            <label for="subnets">Number of Usable Subnets</label>
+            <input class="form-control" id="subnets" placeholder="0.0.0.0" aria-describedby="subnetsHelp">
+            <small id="subnetAddressHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+        </div>
+        <div class="form-group">
+            <label for="hostsPerSubnet">Number of Usable Hosts/Subnet</label>
+            <input class="form-control" id="hostsPerSubnet" placeholder="0.0.0.0" aria-describedby="hostsPerSubnetHelp">
+            <small id="hostsPerSubnetHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+        </div>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
