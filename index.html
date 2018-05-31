@@ -8,7 +8,180 @@
         angular.module('calcApp', [])
 
             .controller('calcCtrl', function ($scope) {
+                $scope.fGrade = function(){
+                    var nMark = 0;
+                    // default net mask
+                    if(($scope.nOctet1 < 192 && $scope.sDefaultNetMask == "255.255.0.0") ||
+                    ($scope.nOctet1 >= 192 && $scope.sDefaultNetMask == "255.255.255.0")){
+                        nMark++;
+                        $scope.sDefaultNetMaskHelp = "";
+                    }else{
+                        $scope.sDefaultNetMaskHelp = "The first octet is " + $scope.nOctet1 + ". If the first octet < 128 the default netmask is 255.0.0.0. If the first octet is between 128 and 191 the default netmask is 255.255.0.0 If the first octet is >= 192 the default netmask is 255.255.255.0.";
+                    }
+                    // subnet
+                    var aAnswers = ["0", "0", "0", "0"];
+                    try{
+                        aAnswers = $scope.sSubnet.split(".");
+                    }catch(e){
+                        0;
+                    }
+                    var [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
+                    if($scope.nOctet1 < 192){
+                        //class b
+                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
+                            $scope.sSubnetHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        }else if(nAns3 != ($scope.nMask3 & $scope.nOctet3)){
+                            $scope.sSubnetHelp = "The subnet is calculated by &ing the 3rd netmask octet " + $scope.nMask3 + " with the 3rd octet in the IP address " + $scope.nOctet3 + ". The last octet of the subnet is 0.";
+                        }else if(nAns4 != 0){
+                            $scope.sSubnetHelp = "The last octet of the netmask is 0. The subnet address should end in .0."
+                        }else{
+                            nMark++;
+                            $scope.sSubnetHelp = "";                            
+                        }
+
+                    }else{
+                        //class c
+                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3){
+                            $scope.sSubnetHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        }else if(nAns4 != ($scope.nMask4 & $scope.nOctet4)){
+                            $scope.sSubnetHelp = "The subnet is calculated by &ing the 4th netmask octet " + $scope.nMask4 + " with the 4th octet in the IP address " + $scope.nOctet4 + ".";
+                        }else{
+                            nMark++;
+                            $scope.sSubnetHelp = "";                                                        
+                        }
+                    }
+                    // first useable
+                    aAnswers = ["0", "0", "0", "0"];
+                    try{
+                        aAnswers = $scope.sFirstUseable.split(".");
+                    }catch(e){
+                        0;
+                    }
+                    [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
+                    if($scope.nOctet1 < 192){
+                        //class b
+                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
+                            $scope.sFirstUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        }else if(nAns3 != ($scope.nMask3 & $scope.nOctet3)){
+                            $scope.sFirstUseableHelp = "The subnet is calculated by &ing the 3rd netmask octet " + $scope.nMask3 + " with the 3rd octet in the IP address " + $scope.nOctet3 + ". The last octet of the subnet is 0.";
+                        }else if(nAns4 != 1){
+                            $scope.sFirstUseableHelp = "The first useable host is the subnet address plus 1."
+                        }else{
+                            nMark++;
+                            $scope.sFirstUseableHelp = "";                            
+                        }
+
+                    }else{
+                        //class c
+                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3){
+                            $scope.sFirstUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        }else if(nAns4 != ($scope.nMask4 & $scope.nOctet4) + 1){
+                            $scope.sFirstUseableHelp = "The first useable host is the subnet address plus 1.";
+                        }else{
+                            nMark++;
+                            $scope.sFirstUseableHelp = "";                                                        
+                        }
+                    }
+                    // last useable
+                    aAnswers = ["0", "0", "0", "0"];
+                    try{
+                        aAnswers = $scope.sLastUseable.split(".");
+                    }catch(e){
+                        0;
+                    }
+                    [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
+                    var nNext = ($scope.nMask3 & $scope.nOctet3) + Math.pow(2, 8 - $scope.nBorrowed);
+                    if($scope.nOctet1 < 192){
+                        //class b
+                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
+                            $scope.sLastUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        }else if(nAns3 != nNext - 1 || nAns4 != 254){
+                            $scope.sLastUseableHelp = "The last usable host address is found by subtracting 2 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + nNext + ".0";
+                        }else{
+                            nMark++;
+                            $scope.sLastUseableHelp = "";                            
+                        }
+
+                    }else{
+                        //class c
+                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3){
+                            $scope.sLastUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        }else if(nAns4 != nNext  - 2){
+                            $scope.sLastUseableHelp = "The last usable host address is found by subtracting 2 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + nNext;
+                        }else{
+                            nMark++;
+                            $scope.sLastUseableHelp = "";                                                        
+                        }
+                    }
+
+                    // broadcast
+                    aAnswers = ["0", "0", "0", "0"];
+                    try{
+                        aAnswers = $scope.sBroadcast.split(".");
+                    }catch(e){
+                        0;
+                    }
+                    [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
+                    var nNext = ($scope.nMask3 & $scope.nOctet3) + Math.pow(2, 8 - $scope.nBorrowed);
+                    if($scope.nOctet1 < 192){
+                        //class b
+                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
+                            $scope.sBroadcastHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        }else if(nAns3 != nNext - 1 || nAns4 != 255){
+                            $scope.sBroadcastHelp = "The broadcast address is found by subtracting 1 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + nNext + ".0";
+                        }else{
+                            nMark++;
+                            $scope.sBroadcastHelp = "";                            
+                        }
+
+                    }else{
+                        //class c
+                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3){
+                            $scope.sBroadcastHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        }else if(nAns4 != nNext  - 1){
+                            $scope.sBroadcastHelp = "The broadcast address is found by subtracting 1 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + nNext;
+                        }else{
+                            nMark++;
+                            $scope.sBroadcastHelp = "";                                                        
+                        }
+                    }
+                    //subnets
+                    var nSubnets = Number($scope.sSubnets);
+                    if(nSubnets != Math.pow(2, $scope.nBorrowed)){
+                        $scope.sSubnetsHelp = "The number of subnets is 2^ of the borrowed bits = 2^" + $scope.nBorrowed + ".";
+                    }else{
+                        nMark++;
+                        $scope.sSubnetsHelp = "";                                                        
+                    }
+                    //hosts
+                    var nHosts = Number($scope.sHosts);
+                    var nRemaining = 8 - $scope.nBorrowed;
+                    if($scope.nOctet1 < 192){
+                        nRemaining += 8;
+                    }
+                    if(nHosts != Math.pow(2, nRemaining) - 2){
+                        $scope.sHostsHelp = "The number of hosts is 2^ of the remaining bits - 2 = 2^" + nRemaining + " - 2.";
+                    }else{
+                        nMark++;
+                        $scope.sHostsHelp = "";                                                        
+                    }
+                    $scope.sMark = nMark + "/7";
+                }
                 $scope.fInit = function(){
+                    $scope.sDefaultNetMask = "";
+                    $scope.sDefaultNetMaskHelp = "";
+                    $scope.sSubnet = "";
+                    $scope.sSubnetHelp = "";
+                    $scope.sFirstUseable = "";
+                    $scope.sFirstUseableHelp = "";
+                    $scope.sLastUseable = "";
+                    $scope.sLastUseableHelp = "";
+                    $scope.sBroadcast = "";
+                    $scope.sBroadcastHelp = "";
+                    $scope.sSubnets = "";                                                        
+                    $scope.sSubnetsHelp = "";                                                        
+                    $scope.sHosts = "";
+                    $scope.sHostsHelp = "";
                     $scope.nOctet1 = Math.floor(Math.random() * (223-128)) + 128;
                     $scope.nOctet2 = Math.floor(Math.random() * 255);
                     $scope.nOctet3 = Math.floor(Math.random() * 255);
@@ -40,7 +213,8 @@
 </head>
 
 <body ng-app="calcApp" ng-controller="calcCtrl">
-    <form class="container">
+    <form class="container" ng-submit="fGrade()">
+        <p class="float-right" ng-bind="sMark"></p>
         <p>For the following Network address and conditions, calculate the information listed below.</p>
 
 
@@ -48,39 +222,41 @@
 
         <div class="form-group">
             <label for="defaultNetMask">Default Subnet Mask</label>
-            <input class="form-control" id="defaultNetMask" placeholder="255.255.255.255" aria-describedby="defaultNetMaskHelp">
-            <small id="defaultNetMaskHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+            <input ng-model="sDefaultNetMask" class="form-control" id="defaultNetMask" placeholder="255.255.255.255" aria-describedby="defaultNetMaskHelp">
+            <small id="defaultNetMaskHelp" class="form-text text-muted" ng-bind="sDefaultNetMaskHelp"></small>
         </div>
         <div class="form-group">
             <label for="subnetAddress">Subnet Address</label>
-            <input class="form-control" id="subnetAddress" placeholder="0.0.0.0" aria-describedby="subnetAddressHelp">
-            <small id="subnetAddressHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+            <input ng-model="sSubnet" class="form-control" id="subnetAddress" placeholder="0.0.0.0" aria-describedby="subnetAddressHelp">
+            <small id="subnetAddressHelp" class="form-text text-muted" ng-bind="sSubnetHelp"></small>
         </div>
         <div class="form-group">
             <label for="firstHostAddress">First Usable Host Address</label>
-            <input class="form-control" id="firstHostAddress" placeholder="0.0.0.0" aria-describedby="firstHostAddressHelp">
-            <small id="firstHostAddressHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+            <input ng-model="sFirstUseable" class="form-control" id="firstHostAddress" placeholder="0.0.0.0" aria-describedby="firstHostAddressHelp">
+            <small id="firstHostAddressHelp" class="form-text text-muted" ng-bind="sFirstUseableHelp"></small>
         </div>
         <div class="form-group">
             <label for="lastHostAddress">Last Usable Host Address</label>
-            <input class="form-control" id="lastHostAddress" placeholder="0.0.0.0" aria-describedby="lastHostAddressHelp">
-            <small id="lastHostAddressHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+            <input ng-model="sLastUseable" class="form-control" id="lastHostAddress" placeholder="0.0.0.0" aria-describedby="lastHostAddressHelp">
+            <small id="lastHostAddressHelp" class="form-text text-muted" ng-bind="sLastUseableHelp"></small>
         </div>
         <div class="form-group">
             <label for="broadcastAddress">Broadcast Address</label>
-            <input class="form-control" id="broadcastAddress" placeholder="0.0.0.0" aria-describedby="broadcastAddressHelp">
-            <small id="broadcastAddressHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+            <input ng-model="sBroadcast" class="form-control" id="broadcastAddress" placeholder="0.0.0.0" aria-describedby="broadcastAddressHelp">
+            <small id="broadcastAddressHelp" class="form-text text-muted" ng-bind="sBroadcastHelp"></small>
         </div>
         <div class="form-group">
             <label for="subnets">Number of Usable Subnets</label>
-            <input class="form-control" id="subnets" placeholder="0.0.0.0" aria-describedby="subnetsHelp">
-            <small id="subnetAddressHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+            <input ng-model="sSubnets" class="form-control" id="subnets" placeholder="0" aria-describedby="subnetsHelp">
+            <small id="subnetAddressHelp" class="form-text text-muted" ng-bind="sSubnetsHelp"></small>
         </div>
         <div class="form-group">
             <label for="hostsPerSubnet">Number of Usable Hosts/Subnet</label>
-            <input class="form-control" id="hostsPerSubnet" placeholder="0.0.0.0" aria-describedby="hostsPerSubnetHelp">
-            <small id="hostsPerSubnetHelp" class="form-text text-muted">The correct answer or a checkbox will go here</small>
+            <input ng-model="sHosts" class="form-control" id="hostsPerSubnet" placeholder="0" aria-describedby="hostsPerSubnetHelp">
+            <small id="hostsPerSubnetHelp" class="form-text text-muted" ng-bind="sHostsHelp"></small>
         </div>
+        <button type="submit">"Mark" this</button>
+        <button type="button" ng-click="fInit()">New problem</button>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
