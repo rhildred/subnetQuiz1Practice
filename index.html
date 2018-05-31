@@ -25,7 +25,7 @@
                     }catch(e){
                         0;
                     }
-                    var [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
+                    var nAns1 = Number(aAnswers[0]), nAns2 = Number(aAnswers[1]), nAns3 = Number(aAnswers[2]), nAns4=Number(aAnswers[3]);
                     if($scope.nOctet1 < 192){
                         //class b
                         if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
@@ -57,7 +57,7 @@
                     }catch(e){
                         0;
                     }
-                    [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
+                    nAns1 = Number(aAnswers[0]); nAns2 = Number(aAnswers[1]); nAns3 = Number(aAnswers[2]); nAns4=Number(aAnswers[3]);
                     if($scope.nOctet1 < 192){
                         //class b
                         if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
@@ -89,10 +89,10 @@
                     }catch(e){
                         0;
                     }
-                    [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
-                    var nNext = ($scope.nMask3 & $scope.nOctet3) + Math.pow(2, 8 - $scope.nBorrowed);
+                    nAns1 = Number(aAnswers[0]); nAns2 = Number(aAnswers[1]); nAns3 = Number(aAnswers[2]); nAns4=Number(aAnswers[3]);
                     if($scope.nOctet1 < 192){
                         //class b
+                        var nNext = ($scope.nMask3 & $scope.nOctet3) + Math.pow(2, 8 - $scope.nBorrowed);
                         if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
                             $scope.sLastUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
                         }else if(nAns3 != nNext - 1 || nAns4 != 254){
@@ -104,6 +104,7 @@
 
                     }else{
                         //class c
+                        var nNext = ($scope.nMask4 & $scope.nOctet4) + Math.pow(2, 8 - $scope.nBorrowed);
                         if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3){
                             $scope.sLastUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
                         }else if(nAns4 != nNext  - 2){
@@ -121,10 +122,10 @@
                     }catch(e){
                         0;
                     }
-                    [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
-                    var nNext = ($scope.nMask3 & $scope.nOctet3) + Math.pow(2, 8 - $scope.nBorrowed);
+                    nAns1 = Number(aAnswers[0]); nAns2 = Number(aAnswers[1]); nAns3 = Number(aAnswers[2]); nAns4=Number(aAnswers[3]);
                     if($scope.nOctet1 < 192){
                         //class b
+                        var nNext = ($scope.nMask3 & $scope.nOctet3) + Math.pow(2, 8 - $scope.nBorrowed);
                         if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
                             $scope.sBroadcastHelp = "Please be careful to copy the first 2 network bytes from the IP address";
                         }else if(nAns3 != nNext - 1 || nAns4 != 255){
@@ -136,6 +137,7 @@
 
                     }else{
                         //class c
+                        var nNext = ($scope.nMask4 & $scope.nOctet4) + Math.pow(2, 8 - $scope.nBorrowed);
                         if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3){
                             $scope.sBroadcastHelp = "Please be careful to copy the first 3 network bytes from the IP address";
                         }else if(nAns4 != nNext  - 1){
@@ -207,6 +209,9 @@
 
                 }
                 $scope.fInit();
+                $scope.mark = function(){
+                    alert("This will fill in with the right or wrong answer");
+                }
             });
 
     </script>
