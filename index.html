@@ -1,8 +1,16 @@
 <html>
 
 <head>
+<style>
+    .form-text.text-muted{
+        color: red!important;
+    }
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" />
+    .glyphicon.glyphicon-ok{
+        color: green;
+    }
+</style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
     <script>
         angular.module('calcApp', [])
@@ -15,6 +23,7 @@
                     ($scope.nOctet1 >= 192 && $scope.sDefaultNetMask == "255.255.255.0")){
                         nMark++;
                         $scope.sDefaultNetMaskHelp = "";
+                        $scope.bMaskCorrect = true;
                     }else{
                         $scope.sDefaultNetMaskHelp = "The first octet is " + $scope.nOctet1 + ". If the first octet < 128 the default netmask is 255.0.0.0. If the first octet is between 128 and 191 the default netmask is 255.255.0.0 If the first octet is >= 192 the default netmask is 255.255.255.0.";
                     }
@@ -25,7 +34,7 @@
                     }catch(e){
                         0;
                     }
-                    var nAns1 = Number(aAnswers[0]), nAns2 = Number(aAnswers[1]), nAns3 = Number(aAnswers[2]), nAns4=Number(aAnswers[3]);
+                    var [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
                     if($scope.nOctet1 < 192){
                         //class b
                         if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
@@ -37,6 +46,7 @@
                         }else{
                             nMark++;
                             $scope.sSubnetHelp = "";                            
+                            $scope.bSubnetCorrect = true;
                         }
 
                     }else{
@@ -47,7 +57,8 @@
                             $scope.sSubnetHelp = "The subnet is calculated by &ing the 4th netmask octet " + $scope.nMask4 + " with the 4th octet in the IP address " + $scope.nOctet4 + ".";
                         }else{
                             nMark++;
-                            $scope.sSubnetHelp = "";                                                        
+                            $scope.sSubnetHelp = "";     
+                            $scope.bSubnetCorrect = true;                                                   
                         }
                     }
                     // first useable
@@ -57,7 +68,7 @@
                     }catch(e){
                         0;
                     }
-                    nAns1 = Number(aAnswers[0]); nAns2 = Number(aAnswers[1]); nAns3 = Number(aAnswers[2]); nAns4=Number(aAnswers[3]);
+                    [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
                     if($scope.nOctet1 < 192){
                         //class b
                         if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
@@ -68,7 +79,8 @@
                             $scope.sFirstUseableHelp = "The first useable host is the subnet address plus 1."
                         }else{
                             nMark++;
-                            $scope.sFirstUseableHelp = "";                            
+                            $scope.sFirstUseableHelp = "";
+                            $scope.bFirstCorrect = true;                            
                         }
 
                     }else{
@@ -79,7 +91,8 @@
                             $scope.sFirstUseableHelp = "The first useable host is the subnet address plus 1.";
                         }else{
                             nMark++;
-                            $scope.sFirstUseableHelp = "";                                                        
+                            $scope.sFirstUseableHelp = "";
+                            $scope.bFirstCorrect = true;                                                        
                         }
                     }
                     // last useable
@@ -89,7 +102,7 @@
                     }catch(e){
                         0;
                     }
-                    nAns1 = Number(aAnswers[0]); nAns2 = Number(aAnswers[1]); nAns3 = Number(aAnswers[2]); nAns4=Number(aAnswers[3]);
+                    [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
                     if($scope.nOctet1 < 192){
                         //class b
                         var nNext = ($scope.nMask3 & $scope.nOctet3) + Math.pow(2, 8 - $scope.nBorrowed);
@@ -99,7 +112,8 @@
                             $scope.sLastUseableHelp = "The last usable host address is found by subtracting 2 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + nNext + ".0";
                         }else{
                             nMark++;
-                            $scope.sLastUseableHelp = "";                            
+                            $scope.sLastUseableHelp = "";      
+                            $scope.bLastCorrect = true;                      
                         }
 
                     }else{
@@ -111,7 +125,8 @@
                             $scope.sLastUseableHelp = "The last usable host address is found by subtracting 2 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + nNext;
                         }else{
                             nMark++;
-                            $scope.sLastUseableHelp = "";                                                        
+                            $scope.sLastUseableHelp = "";
+                            $scope.bLastCorrect = true;                                                        
                         }
                     }
 
@@ -122,7 +137,7 @@
                     }catch(e){
                         0;
                     }
-                    nAns1 = Number(aAnswers[0]); nAns2 = Number(aAnswers[1]); nAns3 = Number(aAnswers[2]); nAns4=Number(aAnswers[3]);
+                    [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
                     if($scope.nOctet1 < 192){
                         //class b
                         var nNext = ($scope.nMask3 & $scope.nOctet3) + Math.pow(2, 8 - $scope.nBorrowed);
@@ -132,7 +147,8 @@
                             $scope.sBroadcastHelp = "The broadcast address is found by subtracting 1 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + nNext + ".0";
                         }else{
                             nMark++;
-                            $scope.sBroadcastHelp = "";                            
+                            $scope.sBroadcastHelp = "";       
+                            $scope.bBroadcastCorrect = true;                     
                         }
 
                     }else{
@@ -144,7 +160,8 @@
                             $scope.sBroadcastHelp = "The broadcast address is found by subtracting 1 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + nNext;
                         }else{
                             nMark++;
-                            $scope.sBroadcastHelp = "";                                                        
+                            $scope.sBroadcastHelp = "";     
+                            $scope.bBroadcastCorrect = true;                                                   
                         }
                     }
                     //subnets
@@ -153,7 +170,8 @@
                         $scope.sSubnetsHelp = "The number of subnets is 2^ of the borrowed bits = 2^" + $scope.nBorrowed + ".";
                     }else{
                         nMark++;
-                        $scope.sSubnetsHelp = "";                                                        
+                        $scope.sSubnetsHelp = "";
+                        $scope.bNetsCorrect = true;                                                   
                     }
                     //hosts
                     var nHosts = Number($scope.sHosts);
@@ -165,25 +183,33 @@
                         $scope.sHostsHelp = "The number of hosts is 2^ of the remaining bits - 2 = 2^" + nRemaining + " - 2.";
                     }else{
                         nMark++;
-                        $scope.sHostsHelp = "";                                                        
+                        $scope.sHostsHelp = "";      
+                        $scope.bHostsCorrect = true;                                                  
                     }
                     $scope.sMark = nMark + "/7";
                 }
                 $scope.fInit = function(){
                     $scope.sDefaultNetMask = "";
                     $scope.sDefaultNetMaskHelp = "";
+                    $scope.bMaskCorrect = false;
                     $scope.sSubnet = "";
                     $scope.sSubnetHelp = "";
+                    $scope.bSubnetCorrect = false;
                     $scope.sFirstUseable = "";
                     $scope.sFirstUseableHelp = "";
+                    $scope.bFirstCorrect = false;
                     $scope.sLastUseable = "";
                     $scope.sLastUseableHelp = "";
+                    $scope.bLastCorrect = false;
                     $scope.sBroadcast = "";
                     $scope.sBroadcastHelp = "";
+                    $scope.bBroadcastCorrect = false;
                     $scope.sSubnets = "";                                                        
-                    $scope.sSubnetsHelp = "";                                                        
+                    $scope.sSubnetsHelp = "";   
+                    $scope.bNetsCorrect = false;                                                     
                     $scope.sHosts = "";
                     $scope.sHostsHelp = "";
+                    $scope.bHostsCorrect = false;
                     $scope.sMark="";
                     $scope.nOctet1 = Math.floor(Math.random() * (223-128)) + 128;
                     $scope.nOctet2 = Math.floor(Math.random() * 255);
@@ -220,53 +246,54 @@
 
 <body ng-app="calcApp" ng-controller="calcCtrl">
     <form class="container" ng-submit="fGrade()">
-        <p class="float-right" ng-bind="sMark"></p>
-        <p>For the following Network address and conditions, calculate the information listed below.</p>
+        <p class="pull-right" ng-bind="sMark"></p>
+        <p>For the following Network address and conditions, use pencil and paper to calculate the information listed below.</p>
 
 
         <p style="text-indent: 2em">Network: {{sNetwork}} Subnet Mask: {{sMask}}</p>
 
         <div class="form-group">
-            <label for="defaultNetMask">Default Subnet Mask</label>
+            <label for="defaultNetMask">Default Subnet Mask</label>&nbsp;<span ng-hide="!bMaskCorrect" class="glyphicon glyphicon-ok" ></span>
             <input ng-model="sDefaultNetMask" class="form-control" id="defaultNetMask" placeholder="255.255.255.255" aria-describedby="defaultNetMaskHelp">
             <small id="defaultNetMaskHelp" class="form-text text-muted" ng-bind="sDefaultNetMaskHelp"></small>
         </div>
         <div class="form-group">
-            <label for="subnetAddress">Subnet Address</label>
+            <label for="subnetAddress">Subnet Address</label>&nbsp;<span ng-hide="!bSubnetCorrect" class="glyphicon glyphicon-ok" ></span>
             <input ng-model="sSubnet" class="form-control" id="subnetAddress" placeholder="0.0.0.0" aria-describedby="subnetAddressHelp">
             <small id="subnetAddressHelp" class="form-text text-muted" ng-bind="sSubnetHelp"></small>
         </div>
         <div class="form-group">
-            <label for="firstHostAddress">First Usable Host Address</label>
+            <label for="firstHostAddress">First Usable Host Address</label>&nbsp;<span ng-hide="!bFirstCorrect" class="glyphicon glyphicon-ok" ></span>
             <input ng-model="sFirstUseable" class="form-control" id="firstHostAddress" placeholder="0.0.0.0" aria-describedby="firstHostAddressHelp">
             <small id="firstHostAddressHelp" class="form-text text-muted" ng-bind="sFirstUseableHelp"></small>
         </div>
         <div class="form-group">
-            <label for="lastHostAddress">Last Usable Host Address</label>
+            <label for="lastHostAddress">Last Usable Host Address</label>&nbsp;<span ng-hide="!bLastCorrect" class="glyphicon glyphicon-ok" ></span>
             <input ng-model="sLastUseable" class="form-control" id="lastHostAddress" placeholder="0.0.0.0" aria-describedby="lastHostAddressHelp">
             <small id="lastHostAddressHelp" class="form-text text-muted" ng-bind="sLastUseableHelp"></small>
         </div>
         <div class="form-group">
-            <label for="broadcastAddress">Broadcast Address</label>
+            <label for="broadcastAddress">Broadcast Address</label>&nbsp;<span ng-hide="!bBroadcastCorrect" class="glyphicon glyphicon-ok" ></span>
             <input ng-model="sBroadcast" class="form-control" id="broadcastAddress" placeholder="0.0.0.0" aria-describedby="broadcastAddressHelp">
             <small id="broadcastAddressHelp" class="form-text text-muted" ng-bind="sBroadcastHelp"></small>
         </div>
         <div class="form-group">
-            <label for="subnets">Number of Usable Subnets</label>
+            <label for="subnets">Number of Usable Subnets</label>&nbsp;<span ng-hide="!bNetsCorrect" class="glyphicon glyphicon-ok" ></span>
             <input ng-model="sSubnets" class="form-control" id="subnets" placeholder="0" aria-describedby="subnetsHelp">
             <small id="subnetAddressHelp" class="form-text text-muted" ng-bind="sSubnetsHelp"></small>
         </div>
         <div class="form-group">
-            <label for="hostsPerSubnet">Number of Usable Hosts/Subnet</label>
+            <label for="hostsPerSubnet">Number of Usable Hosts/Subnet</label>&nbsp;<span ng-hide="!bHostsCorrect" class="glyphicon glyphicon-ok" ></span>
             <input ng-model="sHosts" class="form-control" id="hostsPerSubnet" placeholder="0" aria-describedby="hostsPerSubnetHelp">
             <small id="hostsPerSubnetHelp" class="form-text text-muted" ng-bind="sHostsHelp"></small>
         </div>
+        <p class="pull-right" ng-bind="sMark"></p>
         <button type="submit">"Mark" this</button>
         <button type="button" ng-click="fInit()">New problem</button>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 
 </html>
