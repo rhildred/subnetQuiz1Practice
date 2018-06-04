@@ -1,0 +1,71 @@
+<html>
+
+<head>
+<style>
+    .form-text.text-muted{
+        color: red!important;
+    }
+
+    .glyphicon.glyphicon-ok{
+        color: green;
+    }
+</style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+    <script>
+        angular.module('calcApp', [])
+
+            .controller('calcCtrl', function ($scope) {
+                $scope.fGrade = function(){
+                    var nMark = 0;
+                }
+                $scope.fInit = function(){
+                    $scope.nOctet1 = Math.floor(Math.random() * (223-192)) + 192;
+                    $scope.nOctet2 = Math.floor(Math.random() * 255);
+                    $scope.nOctet3 = Math.floor(Math.random() * 255);
+                    $scope.nOctet4_1 = Math.floor(Math.random() * 255);
+                    $scope.nOctet4_2 = Math.floor(Math.random() * 255);
+                    $scope.nCidr = Math.floor(Math.random() * (32-26)) + 24;
+                    $scope.sNetwork1 = $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + $scope.nOctet4_1 + "/" +  $scope.nCidr;
+                    $scope.sNetwork2 = $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + $scope.nOctet4_2 + "/" +  $scope.nCidr;
+                }
+                $scope.fInit();
+            });
+
+    </script>
+
+</head>
+
+<body ng-app="calcApp" ng-controller="calcCtrl">
+    <form class="container" ng-submit="fGrade()">
+        <p class="pull-right" ng-bind="sMark"></p>
+        <p>The following 2 network addresses can be connected with a switch:</p>
+
+
+        <p style="text-indent: 2em">{{sNetwork1}} - {{sNetwork2}}</p>
+
+        <div class="form-group">
+            <div class="radio">
+                <label>
+                  <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                  true
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                  false
+                </label>
+              </div>            
+              <small id="defaultNetMaskHelp" class="form-text text-muted" ng-bind="sDefaultNetMaskHelp"></small>
+        </div>
+        <p class="pull-right" ng-bind="sMark"></p>
+        <button type="submit">"Mark" this</button>
+        <button type="button" ng-click="fInit()">New problem</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+
+</html>
