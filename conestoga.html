@@ -2,8 +2,8 @@
 
 <head>
 <style>
-    .form-text.text-muted{
-        color: red!important;
+    .glyphicon.glyphicon-remove{
+        color: red;
     }
 
     .glyphicon.glyphicon-ok{
@@ -16,18 +16,60 @@
         angular.module('calcApp', [])
 
             .controller('calcCtrl', function ($scope) {
+                $scope.bCorrect = function(question){
+                    if((question.bTrue && question.bSwitch == "true") || question.bFalse && question.bSwitch == "false"){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
+                $scope.bIncorrect = function(question){
+                    if((question.bTrue && question.bSwitch == "false") || question.bFalse && question.bSwitch == "true"){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
                 $scope.fGrade = function(){
                     var nMark = 0;
+                    for(var n = 0; n < $scope.questions.length; n++){
+                        var oQuestion = $scope.questions[n];
+                        if(oQuestion.nMask4 == 0){
+                            oQuestion.bFalse = true;
+                        }
+                        else if((oQuestion.nOctet4_1 & oQuestion.nMask4) == ( oQuestion.nOctet4_2 & oQuestion.nMask4)){
+                            oQuestion.bTrue = true;
+                        }else{
+                            oQuestion.bFalse = true;
+                        }
+                        if(oQuestion.bTrue && oQuestion.bSwitch == "true"){
+                            nMark++;
+                        }else if(oQuestion.bFalse && oQuestion.bSwitch == "false"){
+                            nMark++;
+                        }
+                    }
+                    $scope.sMark = nMark + "/" + $scope.questions.length;
                 }
                 $scope.fInit = function(){
-                    $scope.nOctet1 = Math.floor(Math.random() * (223-192)) + 192;
-                    $scope.nOctet2 = Math.floor(Math.random() * 255);
-                    $scope.nOctet3 = Math.floor(Math.random() * 255);
-                    $scope.nOctet4_1 = Math.floor(Math.random() * 255);
-                    $scope.nOctet4_2 = Math.floor(Math.random() * 255);
-                    $scope.nCidr = Math.floor(Math.random() * (32-26)) + 24;
-                    $scope.sNetwork1 = $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + $scope.nOctet4_1 + "/" +  $scope.nCidr;
-                    $scope.sNetwork2 = $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + $scope.nOctet4_2 + "/" +  $scope.nCidr;
+                    $scope.questions = [];
+                    for(var nQuestion = 0; nQuestion < 5; nQuestion++){
+                        var oQuestion ={
+                            nOctet1: Math.floor(Math.random() * (223-192)) + 192,
+                            nOctet2: Math.floor(Math.random() * 255),
+                            nOctet3: Math.floor(Math.random() * 255),
+                            nOctet4_1: Math.floor(Math.random() * 255),
+                            nOctet4_2: Math.floor(Math.random() * 255),
+                            nCidr: Math.floor(Math.random() * (32-26)) + 24
+                        }
+                        oQuestion.sNetwork1 = oQuestion.nOctet1 + "." + oQuestion.nOctet2 + "." + oQuestion.nOctet3 + "." + oQuestion.nOctet4_1 + "/" +  oQuestion.nCidr;
+                        oQuestion.sNetwork2 = oQuestion.nOctet1 + "." + oQuestion.nOctet2 + "." + oQuestion.nOctet3 + "." + oQuestion.nOctet4_2 + "/" +  oQuestion.nCidr;
+                        oQuestion.nMask4 = 0;
+                        for(var n = 0; n < oQuestion.nCidr - 24; n++){
+                                oQuestion.nMask4 += Math.pow(2, 7 - n);
+                        }
+                        $scope.questions.push(oQuestion);
+
+                    }
                 }
                 $scope.fInit();
             });
@@ -39,25 +81,31 @@
 <body ng-app="calcApp" ng-controller="calcCtrl">
     <form class="container" ng-submit="fGrade()">
         <p class="pull-right" ng-bind="sMark"></p>
-        <p>The following 2 network addresses can be connected with a switch:</p>
+        <div ng-repeat="question in questions">
+            <p>{{$index + 1}}) The following 2 network addresses can be connected with a switch:</p>
 
 
-        <p style="text-indent: 2em">{{sNetwork1}} - {{sNetwork2}}</p>
-
-        <div class="form-group">
-            <div class="radio">
-                <label>
-                  <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-                  true
-                </label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                  false
-                </label>
-              </div>            
-              <small id="defaultNetMaskHelp" class="form-text text-muted" ng-bind="sDefaultNetMaskHelp"></small>
+            <p style="text-indent: 2em">{{question.sNetwork1}} - {{question.sNetwork2}}
+                <span ng-hide="bCorrect(question)" class="glyphicon glyphicon-ok" ></span>
+                <span ng-hide="bIncorrect(question)" class="glyphicon glyphicon-remove" ></span>
+            </p>
+    
+            <div class="form-group">
+                <div class="radio">
+                    <label>
+                      <input type="radio" ng-model="question.bSwitch" name="options{{$index}}" value=true>
+                      true
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" ng-model="question.bSwitch" name="options{{$index}}" value=false>
+                      false
+                    </label>
+                  </div>            
+                  <small id="defaultNetMaskHelp" class="form-text text-muted" ng-bind="sDefaultNetMaskHelp"></small>
+            </div>
+    
         </div>
         <p class="pull-right" ng-bind="sMark"></p>
         <button type="submit">"Mark" this</button>
