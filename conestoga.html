@@ -34,10 +34,7 @@
                     var nMark = 0;
                     for(var n = 0; n < $scope.questions.length; n++){
                         var oQuestion = $scope.questions[n];
-                        if(oQuestion.nMask4 == 0){
-                            oQuestion.bFalse = true;
-                        }
-                        else if((oQuestion.nOctet4_1 & oQuestion.nMask4) == ( oQuestion.nOctet4_2 & oQuestion.nMask4)){
+                        if((oQuestion.nOctet4_1 & oQuestion.nMask4) == ( oQuestion.nOctet4_2 & oQuestion.nMask4)){
                             oQuestion.bTrue = true;
                         }else{
                             oQuestion.bFalse = true;
