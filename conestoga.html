@@ -30,14 +30,25 @@
                         return true;
                     }
                 }
+                $scope.bCorrect2 = function(question){
+                    if(question.nCorrect && question.nCorrect ==  Number(question.nBits)){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
+                $scope.bIncorrect2 = function(question){
+                    if(question.nCorrect && question.nCorrect != Number(question.nBits)){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
                 $scope.fGrade = function(){
                     var nMark = 0;
                     for(var n = 0; n < $scope.questions.length; n++){
                         var oQuestion = $scope.questions[n];
-                        if(oQuestion.nMask4 == 0){
-                            oQuestion.bFalse = true;
-                        }
-                        else if((oQuestion.nOctet4_1 & oQuestion.nMask4) == ( oQuestion.nOctet4_2 & oQuestion.nMask4)){
+                        if((oQuestion.nOctet4_1 & oQuestion.nMask4) == ( oQuestion.nOctet4_2 & oQuestion.nMask4)){
                             oQuestion.bTrue = true;
                         }else{
                             oQuestion.bFalse = true;
@@ -48,7 +59,25 @@
                             nMark++;
                         }
                     }
-                    $scope.sMark = nMark + "/" + $scope.questions.length;
+                    for(var n = 0; n < $scope.questions2.length; n++){
+                        var oQuestion = $scope.questions2[n];
+                        if((oQuestion.nOctet4_1 & 240) == ( oQuestion.nOctet4_2 & 240)){
+                            oQuestion.nCorrect = 28;
+                        }else if((oQuestion.nOctet4_1 & 224) == ( oQuestion.nOctet4_2 & 224)){
+                            oQuestion.nCorrect = 27;
+                        }else if((oQuestion.nOctet4_1 & 192) == ( oQuestion.nOctet4_2 & 192)){
+                            oQuestion.nCorrect = 26;
+                        }else if((oQuestion.nOctet4_1 & 128) == ( oQuestion.nOctet4_2 & 128)){
+                            oQuestion.nCorrect = 25;
+                        }else{
+                            oQuestion.nCorrect = 24;
+                        }
+
+                        if(oQuestion.nCorrect == Number(oQuestion.nBits)){
+                            nMark++;
+                        }
+                    }
+                    $scope.sMark = nMark + "/" + ($scope.questions.length + $scope.questions2   .length);
                 }
                 $scope.fInit = function(){
                     $scope.questions = [];
@@ -70,6 +99,20 @@
                         $scope.questions.push(oQuestion);
 
                     }
+                    $scope.questions2 = [];
+                    for(var nQuestion = 0; nQuestion < 5; nQuestion++){
+                        var oQuestion ={
+                            nOctet1: Math.floor(Math.random() * (223-192)) + 192,
+                            nOctet2: Math.floor(Math.random() * 255),
+                            nOctet3: Math.floor(Math.random() * 255),
+                            nOctet4_1: Math.floor(Math.random() * 255),
+                            nOctet4_2: Math.floor(Math.random() * 255),
+                        }
+                        oQuestion.sNetwork1 = oQuestion.nOctet1 + "." + oQuestion.nOctet2 + "." + oQuestion.nOctet3 + "." + oQuestion.nOctet4_1;
+                        oQuestion.sNetwork2 = oQuestion.nOctet1 + "." + oQuestion.nOctet2 + "." + oQuestion.nOctet3 + "." + oQuestion.nOctet4_2;
+                        $scope.questions2.push(oQuestion);
+
+                    }
                 }
                 $scope.fInit();
             });
@@ -81,6 +124,7 @@
 <body ng-app="calcApp" ng-controller="calcCtrl">
     <form class="container" ng-submit="fGrade()">
         <p class="pull-right" ng-bind="sMark"></p>
+        <h2>Part 1</h2>
         <div ng-repeat="question in questions">
             <p>{{$index + 1}}) The following 2 network addresses can be connected with a switch:</p>
 
@@ -103,7 +147,50 @@
                       false
                     </label>
                   </div>            
-                  <small id="defaultNetMaskHelp" class="form-text text-muted" ng-bind="sDefaultNetMaskHelp"></small>
+            </div>
+    
+        </div>
+        <h2>Part 2</h2>
+        <div ng-repeat="question in questions2">
+            <p>{{$index + 1}}) What is the most number of network bits that can be turned on and have the following addresses on the same network:</p>
+
+
+            <p style="text-indent: 2em">{{question.sNetwork1}} - {{question.sNetwork2}}
+                <span ng-hide="bCorrect2(question)" class="glyphicon glyphicon-ok" ></span>
+                <span ng-hide="bIncorrect2(question)" class="glyphicon glyphicon-remove" ></span>
+            </p>
+    
+            <div class="form-group">
+                <div class="radio">
+                    <label>
+                      <input type="radio" ng-model="question.nBits" name="options2{{$index}}" value=24>
+                      24
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" ng-model="question.nBits" name="options2{{$index}}" value=25>
+                      25
+                    </label>
+                  </div>            
+                  <div class="radio">
+                    <label>
+                      <input type="radio" ng-model="question.nBits" name="options2{{$index}}" value=26>
+                      26
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" ng-model="question.nBits" name="options2{{$index}}" value=27>
+                      27
+                    </label>
+                  </div>            
+                  <div class="radio">
+                    <label>
+                      <input type="radio" ng-model="question.nBits" name="options{{$index}}" value=28>
+                      28
+                    </label>
+                  </div>            
             </div>
     
         </div>
