@@ -125,6 +125,17 @@
     <form class="container" ng-submit="fGrade()">
         <p class="pull-right" ng-bind="sMark"></p>
         <h2>Part 1</h2>
+                    <p>For Instance: The following 2 network addresses can be connected with a switch:</p>
+
+
+            <p style="text-indent: 2em">192.168.2.11/25 - 192.168.2.25/25
+            </p>
+
+        <ol>
+            <li>See that they are the same in the first 3 octets.</li>
+            <li>See how many bits are network bits in the last octet (make the netmask binary). In this case 1 bit in the last octet is network (/25)</li>
+            <li>Divide by the powers of 2 starting at 128 until we run out of network bits or until one is different. In this case both 11 and 25 are less than 128. They are on the same network so connected by a switch.</li>
+        </ol>
         <div ng-repeat="question in questions">
             <p>{{$index + 1}}) The following 2 network addresses can be connected with a switch:</p>
 
