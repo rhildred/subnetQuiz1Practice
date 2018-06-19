@@ -162,6 +162,14 @@
     
         </div>
         <h2>Part 2</h2>
+        <p>For instance: What is the most number of network bits that can be turned on and have the following addresses on the same network:</p>
+            <p style="text-indent: 2em">192.168.2.214 - 192.168.2.232
+            </p>
+        <ol>
+            <li>Verify that the first 3 octets (24 bits) are the same.</li>
+            <li>convert the last octet (8 bits) to binary by dividing by descending from 128 powers of 2</li>
+            <li>these can both be divided by 128 and 64 but not by 32 so the most bits that can be network is /26</li>
+        </ol>
         <div ng-repeat="question in questions2">
             <p>{{$index + 1}}) What is the most number of network bits that can be turned on and have the following addresses on the same network:</p>
 
