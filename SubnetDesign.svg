@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="750" height="500" viewBox="0, 0, 750, 500">
+  <g id="RouterInternet">
+    <path d="M647.786,165 C610.151,165 579.643,195.509 579.643,233.143 C579.652,233.631 579.667,234.119 579.687,234.607 C559.62,239.767 545.586,257.851 545.571,278.571 C545.571,303.661 565.91,324 591,324 L693.214,324 C724.576,324 750,298.576 750,267.214 C749.976,243.574 735.309,222.422 713.178,214.111 C704.718,185.026 678.076,165.017 647.786,165 z M647.786,176.357 C675.253,176.36 698.78,196.021 703.662,223.05 C724.145,227.891 738.621,246.167 738.643,267.214 C738.643,292.304 718.304,312.643 693.214,312.643 L591,312.643 C572.183,312.643 556.929,297.389 556.929,278.571 C556.929,259.754 572.183,244.5 591,244.5 C591.407,244.515 591.814,244.537 592.22,244.567 C591.428,240.81 591.019,236.982 591,233.143 C591,201.781 616.424,176.357 647.786,176.357 z" fill="#000000"/>
+    <path d="M324,324.5 C283.959,324.5 251.5,292.041 251.5,252 C251.5,211.959 283.959,179.5 324,179.5 C364.041,179.5 396.5,211.959 396.5,252 C396.5,292.041 364.041,324.5 324,324.5 z" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <path d="M553.5,268 L396.5,268" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <text transform="matrix(1, 0, 0, 1, 324.04, 251.5)">
+      <tspan x="-36.04" y="8" font-family="Chalkboard" font-size="24" fill="#000000">Router</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 652.44, 251.5)">
+      <tspan x="-45.56" y="8" font-family="Chalkboard" font-size="24" fill="#000000">Internet</tspan>
+    </text>
+    <text transform="matrix(1, 0, 0, 1, 486, 251.5)">
+      <tspan x="-71" y="2" font-family="Chalkboard" font-size="18" fill="#000000">199.125.226.111</tspan>
+    </text>
+  </g>
+  <g id="NetworkH">
+    <path d="M492.5,385.5 L675.5,385.5 L675.5,467.5 L492.5,467.5 L492.5,385.5 z" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <path d="M380.5,306.5 L546.5,385.5" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <text transform="matrix(1, 0, 0, 1, 592.5, 437.5)">
+      <tspan x="-58.593" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network H</tspan>
+      <tspan x="-58.593" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+    </text>
+  </g>
+  <g id="NetworkG">
+    <path d="M283.5,382.5 L466.5,382.5 L466.5,464.5 L283.5,464.5 L283.5,382.5 z" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <path d="M334.5,324.5 L334.5,382.5" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <text transform="matrix(1, 0, 0, 1, 369.953, 434.5)">
+      <tspan x="-45.047" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network G</tspan>
+      <tspan x="-45.047" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+    </text>
+  </g>
+  <g id="NetworkF">
+    <path d="M75.5,382.5 L258.5,382.5 L258.5,464.5 L75.5,464.5 L75.5,382.5 z" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <path d="M300.5,324.5 L229.5,382.5" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <text transform="matrix(1, 0, 0, 1, 159.5, 423)">
+      <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network F</tspan>
+      <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+    </text>
+  </g>
+  <g id="NetworkE">
+    <path d="M29.5,262.5 L212.5,262.5 L212.5,344.5 L29.5,344.5 L29.5,262.5 z" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <path d="M258.5,282.5 L217.5,303.5" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <text transform="matrix(1, 0, 0, 1, 110.593, 303)">
+      <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network E</tspan>
+      <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+    </text>
+  </g>
+  <g id="NetworkD">
+    <path d="M29.5,130.5 L212.5,130.5 L212.5,212.5 L29.5,212.5 L29.5,130.5 z" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <path d="M264.5,212.5 L212.5,165.5" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <text transform="matrix(1, 0, 0, 1, 124.093, 182.5)">
+      <tspan x="-56.093" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network D</tspan>
+      <tspan x="-56.093" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+    </text>
+  </g>
+  <g id="NetworkB">
+    <path d="M278.953,16.5 L461.953,16.5 L461.953,98.5 L278.953,98.5 L278.953,16.5 z" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <path d="M348.5,185.5 L347.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <text transform="matrix(1, 0, 0, 1, 353.407, 57)">
+      <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network B</tspan>
+      <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+    </text>
+  </g>
+  <g id="NetworkA">
+    <path d="M485.5,16.5 L668.5,16.5 L668.5,98.5 L485.5,98.5 L485.5,16.5 z" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <path d="M380.5,201.5 L526.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <text transform="matrix(1, 0, 0, 1, 568.593, 57)">
+      <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network A</tspan>
+      <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+    </text>
+  </g>
+  <g id="NetworkC">
+    <path d="M68.5,16.5 L251.5,16.5 L251.5,98.5 L68.5,98.5 L68.5,16.5 z" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+    <text transform="matrix(1, 0, 0, 1, 166.5, 68.5)">
+      <tspan x="-50.047" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network C</tspan>
+      <tspan x="-50.047" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+    </text>
+    <path d="M288.5,192.5 L251.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="16"/>
+  </g>
+</svg>
