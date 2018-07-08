@@ -206,13 +206,6 @@
                     }else{
                         $scope.s3SubnetsHelp = "Simply count the number of networks A, B ....";
                     }
-                    // bits borrowed
-                    $scope.n3Borrowed = 1;
-                    if($scope.n3Nets > 4){
-                        $scope.n3Borrowed = 3;
-                    } else if($scope.n3Nets > 2){
-                        $scope.n3Borrowed = 2;
-                    }
                     if($scope.s3SubnetBits == $scope.n3Borrowed){
                         nMark++;
                         $scope.s3SubnetBitsHelp = "";
@@ -281,7 +274,7 @@
                     [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
                     //class c
                     if(nAns1 != $scope.n3Octet1 || nAns2 != $scope.n3Octet2 || nAns3 != $scope.n3Octet3){
-                        $scope.sFirstUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        $scope.s3FirstUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
                     }else if(nAns4 != n3Octet4 + 1){
                         $scope.s3FirstUseableHelp = "The first useable host is the subnet address plus 1.";
                     }else{
@@ -300,9 +293,9 @@
                     //class c
                     var nNext = n3Octet4 + Math.pow(2, 8 - $scope.n3Borrowed);
                     if(nAns1 != $scope.n3Octet1 || nAns2 != $scope.n3Octet2 || nAns3 != $scope.n3Octet3){
-                        $scope.sLastUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        $scope.s3LastUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
                     }else if(nAns4 != nNext  - 2){
-                        $scope.sLastUseableHelp = "The last usable host address is found by subtracting 2 from the next subnet " + $scope.n3Octet1 + "." + $scope.n3Octet2 + "." + $scope.n3Octet3 + "." + nNext;
+                        $scope.s3LastUseableHelp = "The last usable host address is found by subtracting 2 from the next subnet " + $scope.n3Octet1 + "." + $scope.n3Octet2 + "." + $scope.n3Octet3 + "." + nNext;
                     }else{
                         nMark++;
                         $scope.s3LastUseableHelp = "";
@@ -396,15 +389,59 @@
                     $scope.sMask = "255.255." + $scope.nMask3 + "." + $scope.nMask4;
 
                     // Question 3
+                    $scope.s3DefaultNetMask = "";
+                    $scope.s3DefaultNetMaskHelp = "";
+                    $scope.b3MaskCorrect = false;
+                    $scope.s3Subnet = "";
+                    $scope.s3SubnetHelp = "";
+                    $scope.b3SubnetCorrect = false;
+                    $scope.s3SubnetBits = "";
+                    $scope.s3SubnetBitsHelp = "";
+                    $scope.b3SubnetBitsCorrect = false;
+                    $scope.s3HostBits = "";
+                    $scope.s3HostBitsHelp = "";
+                    $scope.b3HostBitsCorrect = false;
+                    $scope.s3NetMask = "";
+                    $scope.s3NetMaskHelp = "";
+                    $scope.b3NetMaskCorrect = false;
+                    $scope.s3FirstUseable = "";
+                    $scope.s3FirstUseableHelp = "";
+                    $scope.b3FirstCorrect = false;
+                    $scope.s3LastUseable = "";
+                    $scope.s3LastUseableHelp = "";
+                    $scope.b3LastCorrect = false;
+                    $scope.s3Broadcast = "";
+                    $scope.s3BroadcastHelp = "";
+                    $scope.b3BroadcastCorrect = false;
+                    $scope.s3Subnets = "";                                                        
+                    $scope.s3SubnetsHelp = "";   
+                    $scope.b3NetsCorrect = false;                                                     
+                    $scope.s3useSubnets = "";                                                        
+                    $scope.s3useSubnetsHelp = "";   
+                    $scope.b3useSubnetsCorrect = false;                                                     
+                    $scope.s3Hosts = "";
+                    $scope.s3HostsHelp = "";
+                    $scope.b3HostsCorrect = false;
                     $scope.n3Octet1 = Math.floor(Math.random() * (223-192)) + 192;
                     $scope.n3Octet2 = Math.floor(Math.random() * 255);
                     $scope.n3Octet3 = Math.floor(Math.random() * 255);
                     $scope.n3Octet4 = Math.floor(Math.random() * 255);
                     $scope.s3IP = $scope.n3Octet1 + "." + $scope.n3Octet2 + "." + $scope.n3Octet3 + "." + $scope.n3Octet4;
                     $scope.n3Nets = Math.floor(Math.random() * (8-2)) + 2;
+                    // bits borrowed
+                    $scope.n3Borrowed = 1;
+                    if($scope.n3Nets > 4){
+                        $scope.n3Borrowed = 3;
+                    } else if($scope.n3Nets > 2){
+                        $scope.n3Borrowed = 2;
+                    }
+
                     for(var n = 0; n < 8; n++){
                         if(n < $scope.n3Nets){
                             $scope["sClass" + n] = "show";
+                            var nRemaining = 8 - $scope.n3Borrowed;
+                            var nHosts = Math.pow(2, nRemaining) - 2;
+                            $scope["nHosts" + n] = Math.ceil(Math.random() * (nHosts - 4)) + 4;
                         }else{
                             $scope["sClass" + n] = "hide";
                         }
@@ -485,7 +522,7 @@
               <path d="M380.5,306.5 L546.5,385.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
               <text transform="matrix(1, 0, 0, 1, 592.5, 437.5)">
                 <tspan x="-58.593" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network H</tspan>
-                <tspan x="-58.593" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+                <tspan x="-58.593" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts7}} hosts)</tspan>
               </text>
             </g>
             <g id="NetworkG" class="{{sClass6}}"}>
@@ -493,7 +530,7 @@
               <path d="M334.5,324.5 L334.5,382.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
               <text transform="matrix(1, 0, 0, 1, 369.953, 434.5)">
                 <tspan x="-45.047" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network G</tspan>
-                <tspan x="-45.047" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+                <tspan x="-45.047" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts6}} hosts)</tspan>
               </text>
             </g>
             <g id="NetworkF" class="{{sClass5}}">
@@ -501,7 +538,7 @@
               <path d="M300.5,324.5 L229.5,382.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
               <text transform="matrix(1, 0, 0, 1, 159.5, 423)">
                 <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network F</tspan>
-                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts5}} hosts)</tspan>
               </text>
             </g>
             <g id="NetworkE" class="{{sClass4}}">
@@ -509,7 +546,7 @@
               <path d="M258.5,282.5 L217.5,303.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
               <text transform="matrix(1, 0, 0, 1, 110.593, 303)">
                 <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network E</tspan>
-                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts4}} hosts)</tspan>
               </text>
             </g>
             <g id="NetworkD" class="{{sClass3}}">
@@ -517,14 +554,14 @@
               <path d="M264.5,212.5 L212.5,165.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
               <text transform="matrix(1, 0, 0, 1, 124.093, 182.5)">
                 <tspan x="-56.093" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network D</tspan>
-                <tspan x="-56.093" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+                <tspan x="-56.093" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts3}} hosts)</tspan>
               </text>
             </g>
             <g id="NetworkC" class="{{sClass2}}">
                 <path d="M68.5,16.5 L251.5,16.5 L251.5,98.5 L68.5,98.5 L68.5,16.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"/>
                 <text transform="matrix(1, 0, 0, 1, 166.5, 68.5)">
                   <tspan x="-50.047" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network C</tspan>
-                  <tspan x="-50.047" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+                  <tspan x="-50.047" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts2}} hosts)</tspan>
                 </text>
                 <path d="M288.5,192.5 L251.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
               </g>
@@ -533,7 +570,7 @@
               <path d="M348.5,185.5 L347.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
               <text transform="matrix(1, 0, 0, 1, 353.407, 57)">
                 <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network B</tspan>
-                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts1}} hosts)</tspan>
               </text>
             </g>
             <g id="NetworkA" class="{{sClass0}}">
@@ -541,7 +578,7 @@
               <path d="M380.5,201.5 L526.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
               <text transform="matrix(1, 0, 0, 1, 568.593, 57)">
                 <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network A</tspan>
-                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">(12 hosts)</tspan>
+                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts0}} hosts)</tspan>
               </text>
             </g>
           </svg>     
