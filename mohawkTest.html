@@ -26,8 +26,7 @@
         angular.module('calcApp', [])
 
             .controller('calcCtrl', function ($scope) {
-                $scope.fGrade = function(){
-                    var nMark = 0;
+                $scope.fMarkQuestion1 = function(nMark){
                     // Question 1
                     // default net mask
                     if(($scope.nOctet1 < 192 && $scope.sDefaultNetMask == "255.255.0.0") ||
@@ -197,6 +196,11 @@
                         $scope.sHostsHelp = "";      
                         $scope.bHostsCorrect = true;                                                  
                     }
+                    return(nMark);
+
+                }
+                $scope.fMarkQuestion3 = function(nMark){
+
                     // Question 3
                     //subnets
                     if($scope.s3Subnets == $scope.n3Nets){
@@ -339,10 +343,15 @@
                         $scope.s3HostsHelp = "";      
                         $scope.b3HostsCorrect = true;                                                  
                     }
+                    return(nMark);
+                }
+                $scope.fGrade = function(){
+                    var nMark = 0;
+                    nMark += $scope.fMarkQuestion1(nMark);
+                    nMark += $scope.fMarkQuestion3(nMark);
                     $scope.sMark = nMark + "/18";
                 }
-                $scope.fInit = function(){
-
+                $scope.fInitQuestion1 = function(){
                     //Question 1
                     $scope.sDefaultNetMask = "";
                     $scope.sDefaultNetMaskHelp = "";
@@ -388,6 +397,8 @@
                     $scope.sNetwork = $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + $scope.nOctet4;
                     $scope.sMask = "255.255." + $scope.nMask3 + "." + $scope.nMask4;
 
+                }
+                $scope.fInitQuestion3 =function(){
                     // Question 3
                     $scope.s3DefaultNetMask = "";
                     $scope.s3DefaultNetMaskHelp = "";
@@ -449,6 +460,11 @@
                     $scope.n3Net = Math.floor(Math.random() * ($scope.n3Nets-1)) + 1;
                     $scope.s3NetworkNominal = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"][$scope.n3Net];
                     $scope.s3Network = String.fromCharCode(65 + $scope.n3Net);
+                }
+                $scope.fInit = function(){
+                    $scope.fInitQuestion1();
+                    $scope.fInitQuestion3();
+
 
                 }
                 $scope.fInit();
