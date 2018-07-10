@@ -1,357 +1,639 @@
 <html>
 
 <head>
-<style>
-    .form-text.text-muted{
-        color: red!important;
-    }
+    <style>
+        .form-text.text-muted {
+            color: red !important;
+        }
 
-    .glyphicon.glyphicon-ok{
-        color: green;
-    }
-    svg{
-        width: 90vw;
-        margin: 0 auto;
-    }
-    g.hide{
-        display: none;
-    }
-    g.show{
-        display: inline;
-    }
-</style>
+        .glyphicon.glyphicon-ok {
+            color: green;
+        }
+
+        svg {
+            width: 90vw;
+            margin: 0 auto;
+        }
+
+        g.hide {
+            display: none;
+        }
+
+        g.show {
+            display: inline;
+        }
+    </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
     <script>
         angular.module('calcApp', [])
 
             .controller('calcCtrl', function ($scope) {
-                $scope.fMarkQuestion1 = function(nMark){
+                $scope.fMarkQuestion1 = function () {
                     // Question 1
+                    var nMark = 0;
                     // default net mask
-                    if(($scope.nOctet1 < 192 && $scope.sDefaultNetMask == "255.255.0.0") ||
-                    ($scope.nOctet1 >= 192 && $scope.sDefaultNetMask == "255.255.255.0")){
+                    if (($scope.nOctet1 < 192 && $scope.sDefaultNetMask == "255.255.0.0") ||
+                        ($scope.nOctet1 >= 192 && $scope.sDefaultNetMask == "255.255.255.0")) {
                         nMark++;
                         $scope.sDefaultNetMaskHelp = "";
                         $scope.bMaskCorrect = true;
-                    }else{
+                    } else {
                         $scope.sDefaultNetMaskHelp = "The first octet is " + $scope.nOctet1 + ". If the first octet < 128 the default netmask is 255.0.0.0. If the first octet is between 128 and 191 the default netmask is 255.255.0.0 If the first octet is >= 192 the default netmask is 255.255.255.0.";
                     }
                     // subnet
                     var aAnswers = ["0", "0", "0", "0"];
-                    try{
+                    try {
                         aAnswers = $scope.sSubnet.split(".");
-                    }catch(e){
+                    } catch (e) {
                         0;
                     }
                     var [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
-                    if($scope.nOctet1 < 192){
+                    if ($scope.nOctet1 < 192) {
                         //class b
-                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
+                        if (nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2) {
                             $scope.sSubnetHelp = "Please be careful to copy the first 2 network bytes from the IP address";
-                        }else if(nAns3 != ($scope.nMask3 & $scope.nOctet3)){
+                        } else if (nAns3 != ($scope.nMask3 & $scope.nOctet3)) {
                             $scope.sSubnetHelp = "The subnet is calculated by &ing the 3rd netmask octet " + $scope.nMask3 + " with the 3rd octet in the IP address " + $scope.nOctet3 + ". The last octet of the subnet is 0.";
-                        }else if(nAns4 != 0){
+                        } else if (nAns4 != 0) {
                             $scope.sSubnetHelp = "The last octet of the netmask is 0. The subnet address should end in .0."
-                        }else{
+                        } else {
                             nMark++;
-                            $scope.sSubnetHelp = "";                            
+                            $scope.sSubnetHelp = "";
                             $scope.bSubnetCorrect = true;
                         }
 
-                    }else{
+                    } else {
                         //class c
-                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3){
+                        if (nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3) {
                             $scope.sSubnetHelp = "Please be careful to copy the first 3 network bytes from the IP address";
-                        }else if(nAns4 != ($scope.nMask4 & $scope.nOctet4)){
+                        } else if (nAns4 != ($scope.nMask4 & $scope.nOctet4)) {
                             $scope.sSubnetHelp = "The subnet is calculated by &ing the 4th netmask octet " + $scope.nMask4 + " with the 4th octet in the IP address " + $scope.nOctet4 + ".";
-                        }else{
+                        } else {
                             nMark++;
-                            $scope.sSubnetHelp = "";     
-                            $scope.bSubnetCorrect = true;                                                   
+                            $scope.sSubnetHelp = "";
+                            $scope.bSubnetCorrect = true;
                         }
                     }
                     // first useable
                     aAnswers = ["0", "0", "0", "0"];
-                    try{
+                    try {
                         aAnswers = $scope.sFirstUseable.split(".");
-                    }catch(e){
+                    } catch (e) {
                         0;
                     }
                     [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
-                    if($scope.nOctet1 < 192){
+                    if ($scope.nOctet1 < 192) {
                         //class b
-                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
+                        if (nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2) {
                             $scope.sFirstUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
-                        }else if(nAns3 != ($scope.nMask3 & $scope.nOctet3)){
+                        } else if (nAns3 != ($scope.nMask3 & $scope.nOctet3)) {
                             $scope.sFirstUseableHelp = "The subnet is calculated by &ing the 3rd netmask octet " + $scope.nMask3 + " with the 3rd octet in the IP address " + $scope.nOctet3 + ". The last octet of the subnet is 0.";
-                        }else if(nAns4 != 1){
+                        } else if (nAns4 != 1) {
                             $scope.sFirstUseableHelp = "The first useable host is the subnet address plus 1."
-                        }else{
+                        } else {
                             nMark++;
                             $scope.sFirstUseableHelp = "";
-                            $scope.bFirstCorrect = true;                            
+                            $scope.bFirstCorrect = true;
                         }
 
-                    }else{
+                    } else {
                         //class c
-                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3){
+                        if (nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3) {
                             $scope.sFirstUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
-                        }else if(nAns4 != ($scope.nMask4 & $scope.nOctet4) + 1){
+                        } else if (nAns4 != ($scope.nMask4 & $scope.nOctet4) + 1) {
                             $scope.sFirstUseableHelp = "The first useable host is the subnet address plus 1.";
-                        }else{
+                        } else {
                             nMark++;
                             $scope.sFirstUseableHelp = "";
-                            $scope.bFirstCorrect = true;                                                        
+                            $scope.bFirstCorrect = true;
                         }
                     }
                     // last useable
                     aAnswers = ["0", "0", "0", "0"];
-                    try{
+                    try {
                         aAnswers = $scope.sLastUseable.split(".");
-                    }catch(e){
+                    } catch (e) {
                         0;
                     }
                     [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
-                    if($scope.nOctet1 < 192){
+                    if ($scope.nOctet1 < 192) {
                         //class b
                         var nNext = ($scope.nMask3 & $scope.nOctet3) + Math.pow(2, 8 - $scope.nBorrowed);
-                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
+                        if (nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2) {
                             $scope.sLastUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
-                        }else if(nAns3 != nNext - 1 || nAns4 != 254){
+                        } else if (nAns3 != nNext - 1 || nAns4 != 254) {
                             $scope.sLastUseableHelp = "The last usable host address is found by subtracting 2 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + nNext + ".0";
-                        }else{
-                            nMark++;
-                            $scope.sLastUseableHelp = "";      
-                            $scope.bLastCorrect = true;                      
-                        }
-
-                    }else{
-                        //class c
-                        var nNext = ($scope.nMask4 & $scope.nOctet4) + Math.pow(2, 8 - $scope.nBorrowed);
-                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3){
-                            $scope.sLastUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
-                        }else if(nAns4 != nNext  - 2){
-                            $scope.sLastUseableHelp = "The last usable host address is found by subtracting 2 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + nNext;
-                        }else{
+                        } else {
                             nMark++;
                             $scope.sLastUseableHelp = "";
-                            $scope.bLastCorrect = true;                                                        
+                            $scope.bLastCorrect = true;
+                        }
+
+                    } else {
+                        //class c
+                        var nNext = ($scope.nMask4 & $scope.nOctet4) + Math.pow(2, 8 - $scope.nBorrowed);
+                        if (nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3) {
+                            $scope.sLastUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        } else if (nAns4 != nNext - 2) {
+                            $scope.sLastUseableHelp = "The last usable host address is found by subtracting 2 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + nNext;
+                        } else {
+                            nMark++;
+                            $scope.sLastUseableHelp = "";
+                            $scope.bLastCorrect = true;
                         }
                     }
 
                     // broadcast
                     aAnswers = ["0", "0", "0", "0"];
-                    try{
+                    try {
                         aAnswers = $scope.sBroadcast.split(".");
-                    }catch(e){
+                    } catch (e) {
                         0;
                     }
                     [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
-                    if($scope.nOctet1 < 192){
+                    if ($scope.nOctet1 < 192) {
                         //class b
                         var nNext = ($scope.nMask3 & $scope.nOctet3) + Math.pow(2, 8 - $scope.nBorrowed);
-                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2){
+                        if (nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2) {
                             $scope.sBroadcastHelp = "Please be careful to copy the first 2 network bytes from the IP address";
-                        }else if(nAns3 != nNext - 1 || nAns4 != 255){
+                        } else if (nAns3 != nNext - 1 || nAns4 != 255) {
                             $scope.sBroadcastHelp = "The broadcast address is found by subtracting 1 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + nNext + ".0";
-                        }else{
+                        } else {
                             nMark++;
-                            $scope.sBroadcastHelp = "";       
-                            $scope.bBroadcastCorrect = true;                     
+                            $scope.sBroadcastHelp = "";
+                            $scope.bBroadcastCorrect = true;
                         }
 
-                    }else{
+                    } else {
                         //class c
                         var nNext = ($scope.nMask4 & $scope.nOctet4) + Math.pow(2, 8 - $scope.nBorrowed);
-                        if(nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3){
+                        if (nAns1 != $scope.nOctet1 || nAns2 != $scope.nOctet2 || nAns3 != $scope.nOctet3) {
                             $scope.sBroadcastHelp = "Please be careful to copy the first 3 network bytes from the IP address";
-                        }else if(nAns4 != nNext  - 1){
+                        } else if (nAns4 != nNext - 1) {
                             $scope.sBroadcastHelp = "The broadcast address is found by subtracting 1 from the next subnet " + $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + nNext;
-                        }else{
+                        } else {
                             nMark++;
-                            $scope.sBroadcastHelp = "";     
-                            $scope.bBroadcastCorrect = true;                                                   
+                            $scope.sBroadcastHelp = "";
+                            $scope.bBroadcastCorrect = true;
                         }
                     }
                     //subnets
                     var nSubnets = Number($scope.sSubnets);
-                    if(nSubnets != Math.pow(2, $scope.nBorrowed)){
+                    if (nSubnets != Math.pow(2, $scope.nBorrowed)) {
                         $scope.sSubnetsHelp = "The number of subnets is 2^ of the borrowed bits = 2^" + $scope.nBorrowed + ".";
-                    }else{
+                    } else {
                         nMark++;
                         $scope.sSubnetsHelp = "";
-                        $scope.bNetsCorrect = true;                                                   
+                        $scope.bNetsCorrect = true;
                     }
                     //hosts
                     var nHosts = Number($scope.sHosts);
                     var nRemaining = 8 - $scope.nBorrowed;
-                    if($scope.nOctet1 < 192){
+                    if ($scope.nOctet1 < 192) {
                         nRemaining += 8;
                     }
-                    if(nHosts != Math.pow(2, nRemaining) - 2){
+                    if (nHosts != Math.pow(2, nRemaining) - 2) {
                         $scope.sHostsHelp = "The number of hosts is 2^ of the remaining bits - 2 = 2^" + nRemaining + " - 2.";
-                    }else{
+                    } else {
                         nMark++;
-                        $scope.sHostsHelp = "";      
-                        $scope.bHostsCorrect = true;                                                  
+                        $scope.sHostsHelp = "";
+                        $scope.bHostsCorrect = true;
                     }
-                    return(nMark);
+                    return (nMark);
 
                 }
-                $scope.fMarkQuestion3 = function(nMark){
+                $scope.fMarkQuestion2 = function() {
+                    //Question 2
+
+                    var nMark = 0;
+                    // calculate borrowed bits
+                    var nBits = 0;
+                    for(; $scope.n2Nets > Math.pow(2, nBits); nBits++);
+                    if(!$scope.b2SubnetConstraint){
+                        // we gave the hosts
+                        nBits = 16 - nBits;
+                    }
+                    // subnet mask
+                    var nLast = 0;
+                    for (var n = 0; n < (nBits >= 8? nBits - 8: nBits); n++) {
+                        nLast += Math.pow(2, 7 - n);
+                    }
+                    var sSubnetMask = "255.255.255." + nLast;
+                    if(nBits < 8){
+                        sSubnetMask = "255.255." + nLast + ".0";
+                    }
+                    if ($scope.s2NetMask == sSubnetMask) {
+                        nMark++;
+                        $scope.s2NetMaskHelp = "";
+                        $scope.b2MaskCorrect = true;
+                    } else {
+                        $scope.s2NetMaskHelp = "The net mask is calculated by turning on all of the network bits from the left.";
+                    }
+                    // subnet
+                    var aAnswers = ["0", "0", "0", "0"];
+                    try {
+                        aAnswers = $scope.s2Subnet.split(".");
+                    } catch (e) {
+                        0;
+                    }
+                    var [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
+                    
+                    var n2LastOctet = 0;
+                    for (var n = 0; n < $scope.n2Net; n++) {
+                        n2LastOctet += Math.pow(2, 8 - (nBits >= 8? nBits - 8: nBits));
+                    }
+                    if(n2LastOctet > 255){
+                        //class b (&c) carry
+                        var n23 = $scope.n2Octet3 + Math.floor(n2LastOctet / 256);
+                        var n24 = n2LastOctet % 256;
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2SubnetAddressHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        } else if (nAns3 != n23 || nAns4 != n24) {
+                            $scope.s2SubnetAddressHelp = "The subnet is calculated by adding the least significant bit until we get to the " + $scope.s2NetworkNominal + " . You may need to carry.";
+                        } else {
+                            nMark++;
+                            $scope.s2SubnetAddressHelp = "";
+                            $scope.b2SubnetAddressCorrect = true;
+                        }
+
+                    } else if (nBits <= 8) {
+                        //true class b
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2SubnetAddressHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        } else if (nAns3 != n2LastOctet) {
+                            $scope.s2SubnetAddressHelp = "The subnet is calculated by adding the least significant bit until we get to the " + $scope.s2NetworkNominal + " .";
+                        } else if (nAns4 != 0) {
+                            $scope.s2SubnetAddressHelp = "The last octet of the netmask is 0. The subnet address should end in .0."
+                        } else {
+                            nMark++;
+                            $scope.s2SubnetAddressHelp = "";
+                            $scope.b2SubnetAddressCorrect = true;
+                        }
+
+                    } else {
+                        //class c'ish
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2 || nAns3 != $scope.n2Octet3) {
+                            $scope.s2SubnetAddressHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        } else if (nAns4 != n2LastOctet) {
+                            $scope.s2SubnetAddressHelp = "The subnet is calculated by adding the least significant bit until we get to the " + $scope.s2NetworkNominal + " .";
+                        } else {
+                            nMark++;
+                            $scope.s2SubnetAddressHelp = "";
+                            $scope.b2SubnetAddressCorrect = true;
+                        }
+                    }
+                    // first available host
+                    var aAnswers = ["0", "0", "0", "0"];
+                    try {
+                        aAnswers = $scope.s2FirstUseable.split(".");
+                    } catch (e) {
+                        0;
+                    }
+                    var [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
+                    
+                    var n2LastOctet = 0;
+                    for (var n = 0; n < $scope.n2Net; n++) {
+                        n2LastOctet += Math.pow(2, 8 - (nBits >= 8? nBits - 8: nBits));
+                    }
+                    if(n2LastOctet > 255){
+                        //class b (&c) carry
+                        var n23 = $scope.n2Octet3 + Math.floor(n2LastOctet / 256);
+                        var n24 = n2LastOctet % 256 + 1;
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2FirstUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        } else if (nAns3 != n23 || nAns4 != n24) {
+                            $scope.s2FirstUseableHelp = "The first available host is the subnet + 1";
+                        } else {
+                            nMark++;
+                            $scope.s2FirstUseableHelpp = "";
+                            $scope.b2FirstCorrect = true;
+                        }
+
+                    } else if (nBits <= 8) {
+                        //true class b
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2FirstUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        } else if (nAns3 != n2LastOctet) {
+                            $scope.s2FirstUseableHelp = "The first available host is the subnet + 1";
+                        } else if (nAns4 != 1) {
+                            $scope.s2FirstUseableHelp = "The last octet of the netmask is 0. The first host is 1"
+                        } else {
+                            nMark++;
+                            $scope.s2FirstUseableHelp = "";
+                            $scope.b2FirstCorrect = true;
+                        }
+
+                    } else {
+                        //class c'ish
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2 || nAns3 != $scope.n2Octet3) {
+                            $scope.s2FirstUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        } else if (nAns4 != n2LastOctet + 1) {
+                            $scope.s2FirstUseableHelp = "The first available host is the subnet + 1";
+                        } else {
+                            nMark++;
+                            $scope.s2FirstUseableHelp = "";
+                            $scope.b2FirstCorrect = true;
+                        }
+                    }
+                    // last available host
+                    var aAnswers = ["0", "0", "0", "0"];
+                    try {
+                        aAnswers = $scope.s2LastUseable.split(".");
+                    } catch (e) {
+                        0;
+                    }
+                    var [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
+                    
+                    var n2LastOctet = 0;
+                    for (var n = 0; n <= $scope.n2Net; n++) {
+                        n2LastOctet += Math.pow(2, 8 - (nBits >= 8? nBits - 8: nBits));
+                    }
+                    if(n2LastOctet > 255){
+                        //class b (&c) carry
+                        var n23 = $scope.n2Octet3 + Math.floor(n2LastOctet / 256);
+                        var n24 = n2LastOctet % 256;
+                        if(n24 ==0){
+                            //borrow
+                            n24 = 254;
+                            n23--;
+                        }else{
+                            n24 -= 2;
+                        }
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2LastUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        } else if (nAns3 != n23 || nAns4 != n24) {
+                            $scope.s2LastUseableHelp = "The last available host is the next subnet - 2";
+                        } else {
+                            nMark++;
+                            $scope.s2LastUseableHelp = "";
+                            $scope.b2LastCorrect = true;
+                        }
+
+                    } else if (nBits <= 8) {
+                        //true class b
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2LastUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        } else if (nAns3 != n2LastOctet - 1) {
+                            $scope.s2LastUseableHelp = "The first available host is the subnet + 1";
+                        } else if (nAns4 != 254) {
+                            $scope.s2LastUseableHelp = "The last octet of the netmask is 0. The subnet address should end in 254."
+                        } else {
+                            nMark++;
+                            $scope.s2LastUseableHelp = "";
+                            $scope.b2LastCorrect = true;
+                        }
+
+                    } else {
+                        //class c'ish
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2 || nAns3 != $scope.n2Octet3) {
+                            $scope.s2LastUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        } else if (nAns4 != n2LastOctet -2) {
+                            $scope.s2LastUseableHelp = "The first available host is the subnet + 1";
+                        } else {
+                            nMark++;
+                            $scope.s2LastUseableHelp = "";
+                            $scope.b2LastCorrect = true;
+                        }
+                    }
+                    // broadcast
+                    var aAnswers = ["0", "0", "0", "0"];
+                    try {
+                        aAnswers = $scope.s2Broadcast.split(".");
+                    } catch (e) {
+                        0;
+                    }
+                    var [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
+                    
+                    var n2LastOctet = 0;
+                    for (var n = 0; n <= $scope.n2Net; n++) {
+                        n2LastOctet += Math.pow(2, 8 - (nBits >= 8? nBits - 8: nBits));
+                    }
+                    if(n2LastOctet > 255){
+                        //class b (&c) carry
+                        var n23 = $scope.n2Octet3 + Math.floor(n2LastOctet / 256);
+                        var n24 = n2LastOctet % 256;
+                        if(n24 ==0){
+                            //borrow
+                            n24 = 254;
+                            n23--;
+                        }else{
+                            n24 -= 1;
+                        }
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2BroadcastHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        } else if (nAns3 != n23 || nAns4 != n24) {
+                            $scope.s2BroadcastHelp = "The broadcast is the next subnet - 1";
+                        } else {
+                            nMark++;
+                            $scope.s2BroadcastHelp = "";
+                            $scope.b2BroadcastCorrect = true;
+                        }
+
+                    } else if (nBits <= 8) {
+                        //true class b
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2BroadcastHelp = "Please be careful to copy the first 2 network bytes from the IP address";
+                        } else if (nAns3 != n2LastOctet - 1) {
+                            $scope.s2BroadcastHelp = "The broadcast is the next subnet - 1";
+                        } else if (nAns4 != 255) {
+                            $scope.s2BroadcastHelp = "The last octet of the netmask is 0. The subnet address should end in 255."
+                        } else {
+                            nMark++;
+                            $scope.s2BroadcastHelp = "";
+                            $scope.b2BroadcastCorrect = true;
+                        }
+
+                    } else {
+                        //class c'ish
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2 || nAns3 != $scope.n2Octet3) {
+                            $scope.s2BroadcastHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        } else if (nAns4 != n2LastOctet -1) {
+                            $scope.s2BroadcastHelp = "The first available host is the subnet + 1";
+                        } else {
+                            nMark++;
+                            $scope.s2BroadcastHelp = "";
+                            $scope.b2BroadcastCorrect = true;
+                        }
+                    }
+                    //subnets
+                    var nSubnets = Number($scope.s2useSubnets);
+                    if (nSubnets != Math.pow(2, nBits)) {
+                        $scope.s2useSubnetsHelp = "The number of subnets is 2^ of the borrowed bits = 2^" + nBits + ".";
+                    } else {
+                        nMark++;
+                        $scope.s2useSubnetsHelp = "";
+                        $scope.b2useSubnetsCorrect = true;
+                    }
+                    //hosts
+                    var nHosts = Number($scope.s2Hosts);
+                    var nRemaining = 16 - nBits;
+                    if (nHosts != Math.pow(2, nRemaining) - 2) {
+                        $scope.s2HostsHelp = "The number of hosts is 2^ of the remaining bits - 2 = 2^" + nRemaining + " - 2.";
+                    } else {
+                        nMark++;
+                        $scope.s2HostsHelp = "";
+                        $scope.b2HostsCorrect = true;
+                    }
+
+
+                    return nMark;
+                }
+                $scope.fMarkQuestion3 = function () {
 
                     // Question 3
+                    var nMark = 0;
                     //subnets
-                    if($scope.s3Subnets == $scope.n3Nets){
+                    if ($scope.s3Subnets == $scope.n3Nets) {
                         nMark++;
                         $scope.s3SubnetsHelp = "";
                         $scope.b3SubnetsCorrect = true;
-                    }else{
+                    } else {
                         $scope.s3SubnetsHelp = "Simply count the number of networks A, B ....";
                     }
-                    if($scope.s3SubnetBits == $scope.n3Borrowed){
+                    if ($scope.s3SubnetBits == $scope.n3Borrowed) {
                         nMark++;
                         $scope.s3SubnetBitsHelp = "";
                         $scope.b3SubnetBitsCorrect = true;
-                    }else{
+                    } else {
                         $scope.s3SubnetBitsHelp = "The number of subnet bits is the next larger power of 2. For instance if you need 3 subnets you need 2 bits ... 2^2 == 4";
                     }
                     // host bits
-                    if($scope.s3HostBits == 8 - $scope.n3Borrowed){
+                    if ($scope.s3HostBits == 8 - $scope.n3Borrowed) {
                         nMark++;
                         $scope.s3HostBitsHelp = "";
                         $scope.b3HostBitsCorrect = true;
-                    }else{
+                    } else {
                         $scope.s3HostBitsHelp = "The number of host bits is 8 - the number of network bits";
                     }
                     // default net mask
-                    if($scope.s3DefaultNetMask == "255.255.255.0"){
+                    if ($scope.s3DefaultNetMask == "255.255.255.0") {
                         nMark++;
                         $scope.s3DefaultNetMaskHelp = "";
                         $scope.b3DefaultMaskCorrect = true;
-                    }else{
+                    } else {
                         $scope.s3DefaultNetMaskHelp = "The first octet is " + $scope.n3Octet1 + ". If the first octet < 128 the default netmask is 255.0.0.0. If the first octet is between 128 and 191 the default netmask is 255.255.0.0 If the first octet is >= 192 the default netmask is 255.255.255.0.";
                     }
                     // net mask
                     $scope.n3Mask4 = 0;
-                    for(var n = 0; n < $scope.n3Borrowed; n++){
+                    for (var n = 0; n < $scope.n3Borrowed; n++) {
                         $scope.n3Mask4 += Math.pow(2, 7 - n);
                     }
-                    if($scope.s3NetMask == "255.255.255." + $scope.n3Mask4){
+                    if ($scope.s3NetMask == "255.255.255." + $scope.n3Mask4) {
                         nMark++;
                         $scope.s3NetMaskHelp = "";
                         $scope.b3MaskCorrect = true;
-                    }else{
+                    } else {
                         $scope.s3NetMaskHelp = "The net mask is calculated by turning on all of the network bits from the left.";
                     }
 
                     // subnet
                     var aAnswers = ["0", "0", "0", "0"];
-                    try{
+                    try {
                         aAnswers = $scope.s3Subnet.split(".");
-                    }catch(e){
+                    } catch (e) {
                         0;
                     }
                     var [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
-                    //class c
+                    
                     var n3Octet4 = 0;
-                    for(var n = 0; n < $scope.n3Net; n++){
+                    for (var n = 0; n < $scope.n3Net; n++) {
                         n3Octet4 += Math.pow(2, 8 - $scope.n3Borrowed);
                     }
-                    if(nAns1 != $scope.n3Octet1 || nAns2 != $scope.n3Octet2 || nAns3 != $scope.n3Octet3){
+                    if (nAns1 != $scope.n3Octet1 || nAns2 != $scope.n3Octet2 || nAns3 != $scope.n3Octet3) {
                         $scope.s3SubnetHelp = "Please be careful to copy the first 3 network bytes from the IP address";
-                    }else if(nAns4 != n3Octet4){
+                    } else if (nAns4 != n3Octet4) {
                         $scope.s3SubnetHelp = "The subnet is calculated by adding the least significant network bit for the " + $scope.s3NetworkNominal + " network.";
-                    }else{
+                    } else {
                         nMark++;
-                        $scope.s3SubnetHelp = "";     
-                        $scope.b3SubnetCorrect = true;                                                   
+                        $scope.s3SubnetHelp = "";
+                        $scope.b3SubnetCorrect = true;
                     }
                     // first useable
                     aAnswers = ["0", "0", "0", "0"];
-                    try{
+                    try {
                         aAnswers = $scope.s3FirstUseable.split(".");
-                    }catch(e){
+                    } catch (e) {
                         0;
                     }
                     [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
-                    //class c
-                    if(nAns1 != $scope.n3Octet1 || nAns2 != $scope.n3Octet2 || nAns3 != $scope.n3Octet3){
+                    
+                    if (nAns1 != $scope.n3Octet1 || nAns2 != $scope.n3Octet2 || nAns3 != $scope.n3Octet3) {
                         $scope.s3FirstUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
-                    }else if(nAns4 != n3Octet4 + 1){
+                    } else if (nAns4 != n3Octet4 + 1) {
                         $scope.s3FirstUseableHelp = "The first useable host is the subnet address plus 1.";
-                    }else{
+                    } else {
                         nMark++;
                         $scope.s3FirstUseableHelp = "";
-                        $scope.b3FirstCorrect = true;                                                        
+                        $scope.b3FirstCorrect = true;
                     }
                     // last useable
                     aAnswers = ["0", "0", "0", "0"];
-                    try{
+                    try {
                         aAnswers = $scope.s3LastUseable.split(".");
-                    }catch(e){
+                    } catch (e) {
                         0;
                     }
                     [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
-                    //class c
+                    
                     var nNext = n3Octet4 + Math.pow(2, 8 - $scope.n3Borrowed);
-                    if(nAns1 != $scope.n3Octet1 || nAns2 != $scope.n3Octet2 || nAns3 != $scope.n3Octet3){
+                    if (nAns1 != $scope.n3Octet1 || nAns2 != $scope.n3Octet2 || nAns3 != $scope.n3Octet3) {
                         $scope.s3LastUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
-                    }else if(nAns4 != nNext  - 2){
+                    } else if (nAns4 != nNext - 2) {
                         $scope.s3LastUseableHelp = "The last usable host address is found by subtracting 2 from the next subnet " + $scope.n3Octet1 + "." + $scope.n3Octet2 + "." + $scope.n3Octet3 + "." + nNext;
-                    }else{
+                    } else {
                         nMark++;
                         $scope.s3LastUseableHelp = "";
-                        $scope.b3LastCorrect = true;                                                        
+                        $scope.b3LastCorrect = true;
                     }
 
                     // broadcast
                     aAnswers = ["0", "0", "0", "0"];
-                    try{
+                    try {
                         aAnswers = $scope.s3Broadcast.split(".");
-                    }catch(e){
+                    } catch (e) {
                         0;
                     }
                     [nAns1, nAns2, nAns3, nAns4] = aAnswers.map(x => Number(x));
-                    //class c
-                    if(nAns1 != $scope.n3Octet1 || nAns2 != $scope.n3Octet2 || nAns3 != $scope.n3Octet3){
+                    
+                    if (nAns1 != $scope.n3Octet1 || nAns2 != $scope.n3Octet2 || nAns3 != $scope.n3Octet3) {
                         $scope.s3BroadcastHelp = "Please be careful to copy the first 3 network bytes from the IP address";
-                    }else if(nAns4 != nNext  - 1){
+                    } else if (nAns4 != nNext - 1) {
                         $scope.s3BroadcastHelp = "The broadcast address is found by subtracting 1 from the next subnet " + $scope.n3Octet1 + "." + $scope.n3Octet2 + "." + $scope.n3Octet3 + "." + nNext;
-                    }else{
+                    } else {
                         nMark++;
-                        $scope.s3BroadcastHelp = "";     
-                        $scope.b3BroadcastCorrect = true;                                                   
+                        $scope.s3BroadcastHelp = "";
+                        $scope.b3BroadcastCorrect = true;
                     }
                     //subnets
                     var nSubnets = Number($scope.s3useSubnets);
-                    if(nSubnets != Math.pow(2, $scope.n3Borrowed)){
+                    if (nSubnets != Math.pow(2, $scope.n3Borrowed)) {
                         $scope.s3useSubnetsHelp = "The number of subnets is 2^ of the borrowed bits = 2^" + $scope.n3Borrowed + ".";
-                    }else{
+                    } else {
                         nMark++;
                         $scope.s3useSubnetsHelp = "";
-                        $scope.b3useSubnetsCorrect = true;                                                   
+                        $scope.b3useSubnetsCorrect = true;
                     }
                     //hosts
                     var nHosts = Number($scope.s3Hosts);
                     var nRemaining = 8 - $scope.n3Borrowed;
-                    if(nHosts != Math.pow(2, nRemaining) - 2){
+                    if (nHosts != Math.pow(2, nRemaining) - 2) {
                         $scope.s3HostsHelp = "The number of hosts is 2^ of the remaining bits - 2 = 2^" + nRemaining + " - 2.";
-                    }else{
+                    } else {
                         nMark++;
-                        $scope.s3HostsHelp = "";      
-                        $scope.b3HostsCorrect = true;                                                  
+                        $scope.s3HostsHelp = "";
+                        $scope.b3HostsCorrect = true;
                     }
-                    return(nMark);
+                    return (nMark);
                 }
-                $scope.fGrade = function(){
+                $scope.fGrade = function () {
                     var nMark = 0;
-                    nMark += $scope.fMarkQuestion1(nMark);
-                    nMark += $scope.fMarkQuestion3(nMark);
-                    $scope.sMark = nMark + "/18";
+                    nMark += $scope.fMarkQuestion1();
+                    nMark += $scope.fMarkQuestion2();
+                    nMark += $scope.fMarkQuestion3();
+                    $scope.sMark = nMark + "/25";
                 }
-                $scope.fInitQuestion1 = function(){
+                $scope.fInitQuestion1 = function () {
                     //Question 1
                     $scope.sDefaultNetMask = "";
                     $scope.sDefaultNetMaskHelp = "";
@@ -368,37 +650,80 @@
                     $scope.sBroadcast = "";
                     $scope.sBroadcastHelp = "";
                     $scope.bBroadcastCorrect = false;
-                    $scope.sSubnets = "";                                                        
-                    $scope.sSubnetsHelp = "";   
-                    $scope.bNetsCorrect = false;                                                     
+                    $scope.sSubnets = "";
+                    $scope.sSubnetsHelp = "";
+                    $scope.bNetsCorrect = false;
                     $scope.sHosts = "";
                     $scope.sHostsHelp = "";
                     $scope.bHostsCorrect = false;
-                    $scope.sMark="";
-                    $scope.nOctet1 = Math.floor(Math.random() * (223-128)) + 128;
+                    $scope.sMark = "";
+                    $scope.nOctet1 = Math.floor(Math.random() * (223 - 128)) + 128;
                     $scope.nOctet2 = Math.floor(Math.random() * 255);
                     $scope.nOctet3 = Math.floor(Math.random() * 255);
                     $scope.nOctet4 = Math.floor(Math.random() * 255);
                     $scope.nMask3 = 255;
                     $scope.nMask4 = 0;
-                    $scope.nBorrowed = Math.ceil(Math.random()*4);
-                    if($scope.nOctet1 < 192){
-                        $scope.nBorrowed = Math.ceil(Math.random()*2) + 5;
+                    $scope.nBorrowed = Math.ceil(Math.random() * 4);
+                    if ($scope.nOctet1 < 192) {
+                        $scope.nBorrowed = Math.ceil(Math.random() * 2) + 5;
                         $scope.nMask3 = 0;
-                        for(var n = 0; n < $scope.nBorrowed; n++){
+                        for (var n = 0; n < $scope.nBorrowed; n++) {
                             $scope.nMask3 += Math.pow(2, 7 - n);
                         }
-                    }else{
-                        for(var n = 0; n < $scope.nBorrowed; n++){
+                    } else {
+                        for (var n = 0; n < $scope.nBorrowed; n++) {
                             $scope.nMask4 += Math.pow(2, 7 - n);
                         }
-                        
+
                     }
                     $scope.sNetwork = $scope.nOctet1 + "." + $scope.nOctet2 + "." + $scope.nOctet3 + "." + $scope.nOctet4;
                     $scope.sMask = "255.255." + $scope.nMask3 + "." + $scope.nMask4;
 
                 }
-                $scope.fInitQuestion3 =function(){
+                $scope.fInitQuestion2 = function () {
+                    // Question 2
+                    $scope.s2NetMask = "";
+                    $scope.s2NetMaskHelp = "";
+                    $scope.b2NetMaskCorrect = false;
+                    $scope.s2Subnet = "";
+                    $scope.s2SubnetAddressHelp = "";
+                    $scope.b2SubnetAddressCorrect = false;
+                    $scope.s2FirstUseable = "";
+                    $scope.s2FirstUseableHelp = "";
+                    $scope.b2FirstCorrect = false;
+                    $scope.s2LastUseable = "";
+                    $scope.s2LastUseableHelp = "";
+                    $scope.b2LastCorrect = false;
+                    $scope.s2Broadcast = "";
+                    $scope.s2BroadcastHelp = "";
+                    $scope.b2BroadcastCorrect = false;
+                    $scope.s2Subnets = "";
+                    $scope.s2SubnetsHelp = "";
+                    $scope.b2NetsCorrect = false;
+                    $scope.s2useSubnets = "";
+                    $scope.s2useSubnetsHelp = "";
+                    $scope.b2useSubnetsCorrect = false;
+                    $scope.s2Hosts = "";
+                    $scope.s2HostsHelp = "";
+                    $scope.b2HostsCorrect = false;
+                    $scope.n2Octet1 = Math.floor(Math.random() * (192 - 128)) + 128;
+                    $scope.n2Octet2 = Math.floor(Math.random() * 255);
+                    $scope.n2Octet3 = Math.floor(Math.random() * 255);
+                    $scope.n2Octet4 = Math.floor(Math.random() * 255);
+                    $scope.s2IP = $scope.n2Octet1 + "." + $scope.n2Octet2 + "." + $scope.n2Octet3 + "." + $scope.n2Octet4;
+                    $scope.n2Nets = Math.floor(Math.random() * (1024 -8 )) + 8;
+                    $scope.n2Net = Math.floor(Math.random() * (7)) + 1;
+                    $scope.s2NetworkNominal = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"][$scope.n2Net];
+                    $scope.b2SubnetConstraint = Math.random() > .5?true:false;
+                    if($scope.b2SubnetConstraint){
+                        $scope.s2SubnetsOrHosts = "subnets";
+                        $scope.s2HostsOrSubnets = "hosts";
+                    }else{
+                        $scope.s2SubnetsOrHosts = "hosts";
+                        $scope.s2HostsOrSubnets = "subnets";
+                    }
+                }
+                $scope.fInitQuestion3 = function () {
                     // Question 3
                     $scope.s3DefaultNetMask = "";
                     $scope.s3DefaultNetMaskHelp = "";
@@ -424,45 +749,46 @@
                     $scope.s3Broadcast = "";
                     $scope.s3BroadcastHelp = "";
                     $scope.b3BroadcastCorrect = false;
-                    $scope.s3Subnets = "";                                                        
-                    $scope.s3SubnetsHelp = "";   
-                    $scope.b3NetsCorrect = false;                                                     
-                    $scope.s3useSubnets = "";                                                        
-                    $scope.s3useSubnetsHelp = "";   
-                    $scope.b3useSubnetsCorrect = false;                                                     
+                    $scope.s3Subnets = "";
+                    $scope.s3SubnetsHelp = "";
+                    $scope.b3NetsCorrect = false;
+                    $scope.s3useSubnets = "";
+                    $scope.s3useSubnetsHelp = "";
+                    $scope.b3useSubnetsCorrect = false;
                     $scope.s3Hosts = "";
                     $scope.s3HostsHelp = "";
                     $scope.b3HostsCorrect = false;
-                    $scope.n3Octet1 = Math.floor(Math.random() * (223-192)) + 192;
+                    $scope.n3Octet1 = Math.floor(Math.random() * (223 - 192)) + 192;
                     $scope.n3Octet2 = Math.floor(Math.random() * 255);
                     $scope.n3Octet3 = Math.floor(Math.random() * 255);
                     $scope.n3Octet4 = Math.floor(Math.random() * 255);
                     $scope.s3IP = $scope.n3Octet1 + "." + $scope.n3Octet2 + "." + $scope.n3Octet3 + "." + $scope.n3Octet4;
-                    $scope.n3Nets = Math.floor(Math.random() * (8-2)) + 2;
+                    $scope.n3Nets = Math.floor(Math.random() * (8 - 2)) + 2;
                     // bits borrowed
                     $scope.n3Borrowed = 1;
-                    if($scope.n3Nets > 4){
+                    if ($scope.n3Nets > 4) {
                         $scope.n3Borrowed = 3;
-                    } else if($scope.n3Nets > 2){
+                    } else if ($scope.n3Nets > 2) {
                         $scope.n3Borrowed = 2;
                     }
 
-                    for(var n = 0; n < 8; n++){
-                        if(n < $scope.n3Nets){
+                    for (var n = 0; n < 8; n++) {
+                        if (n < $scope.n3Nets) {
                             $scope["sClass" + n] = "show";
                             var nRemaining = 8 - $scope.n3Borrowed;
                             var nHosts = Math.pow(2, nRemaining) - 2;
                             $scope["nHosts" + n] = Math.ceil(Math.random() * (nHosts - 4)) + 4;
-                        }else{
+                        } else {
                             $scope["sClass" + n] = "hide";
                         }
                     }
-                    $scope.n3Net = Math.floor(Math.random() * ($scope.n3Nets-1)) + 1;
+                    $scope.n3Net = Math.floor(Math.random() * ($scope.n3Nets - 1)) + 1;
                     $scope.s3NetworkNominal = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth"][$scope.n3Net];
                     $scope.s3Network = String.fromCharCode(65 + $scope.n3Net);
                 }
-                $scope.fInit = function(){
+                $scope.fInit = function () {
                     $scope.fInitQuestion1();
+                    $scope.fInitQuestion2();
                     $scope.fInitQuestion3();
 
 
@@ -477,190 +803,277 @@
 <body ng-app="calcApp" ng-controller="calcCtrl">
     <form class="container" ng-submit="fGrade()">
         <p class="pull-right" ng-bind="sMark"></p>
+
+        <!-- Question 1-->
         <p>1) For the following Network address and conditions, use pencil and paper to calculate the information listed below.</p>
 
 
         <p style="text-indent: 2em">Network: {{sNetwork}} Subnet Mask: {{sMask}}</p>
 
         <div class="form-group">
-            <label for="defaultNetMask">Default Subnet Mask</label>&nbsp;<span ng-hide="!bMaskCorrect" class="glyphicon glyphicon-ok" ></span>
+            <label for="defaultNetMask">Default Subnet Mask</label>&nbsp;
+            <span ng-hide="!bMaskCorrect" class="glyphicon glyphicon-ok"></span>
             <input ng-model="sDefaultNetMask" class="form-control" id="defaultNetMask" placeholder="255.255.255.255" aria-describedby="defaultNetMaskHelp">
             <small id="defaultNetMaskHelp" class="form-text text-muted" ng-bind="sDefaultNetMaskHelp"></small>
         </div>
         <div class="form-group">
-            <label for="subnetAddress">Subnet Address</label>&nbsp;<span ng-hide="!bSubnetCorrect" class="glyphicon glyphicon-ok" ></span>
+            <label for="subnetAddress">Subnet Address</label>&nbsp;
+            <span ng-hide="!bSubnetCorrect" class="glyphicon glyphicon-ok"></span>
             <input ng-model="sSubnet" class="form-control" id="subnetAddress" placeholder="0.0.0.0" aria-describedby="subnetAddressHelp">
             <small id="subnetAddressHelp" class="form-text text-muted" ng-bind="sSubnetHelp"></small>
         </div>
         <div class="form-group">
-            <label for="firstHostAddress">First Usable Host Address</label>&nbsp;<span ng-hide="!bFirstCorrect" class="glyphicon glyphicon-ok" ></span>
+            <label for="firstHostAddress">First Usable Host Address</label>&nbsp;
+            <span ng-hide="!bFirstCorrect" class="glyphicon glyphicon-ok"></span>
             <input ng-model="sFirstUseable" class="form-control" id="firstHostAddress" placeholder="0.0.0.0" aria-describedby="firstHostAddressHelp">
             <small id="firstHostAddressHelp" class="form-text text-muted" ng-bind="sFirstUseableHelp"></small>
         </div>
         <div class="form-group">
-            <label for="lastHostAddress">Last Usable Host Address</label>&nbsp;<span ng-hide="!bLastCorrect" class="glyphicon glyphicon-ok" ></span>
+            <label for="lastHostAddress">Last Usable Host Address</label>&nbsp;
+            <span ng-hide="!bLastCorrect" class="glyphicon glyphicon-ok"></span>
             <input ng-model="sLastUseable" class="form-control" id="lastHostAddress" placeholder="0.0.0.0" aria-describedby="lastHostAddressHelp">
             <small id="lastHostAddressHelp" class="form-text text-muted" ng-bind="sLastUseableHelp"></small>
         </div>
         <div class="form-group">
-            <label for="broadcastAddress">Broadcast Address</label>&nbsp;<span ng-hide="!bBroadcastCorrect" class="glyphicon glyphicon-ok" ></span>
+            <label for="broadcastAddress">Broadcast Address</label>&nbsp;
+            <span ng-hide="!bBroadcastCorrect" class="glyphicon glyphicon-ok"></span>
             <input ng-model="sBroadcast" class="form-control" id="broadcastAddress" placeholder="0.0.0.0" aria-describedby="broadcastAddressHelp">
             <small id="broadcastAddressHelp" class="form-text text-muted" ng-bind="sBroadcastHelp"></small>
         </div>
         <div class="form-group">
-            <label for="subnets">Number of Usable Subnets</label>&nbsp;<span ng-hide="!bNetsCorrect" class="glyphicon glyphicon-ok" ></span>
+            <label for="subnets">Number of Usable Subnets</label>&nbsp;
+            <span ng-hide="!bNetsCorrect" class="glyphicon glyphicon-ok"></span>
             <input ng-model="sSubnets" class="form-control" id="subnets" placeholder="0" aria-describedby="subnetsHelp">
             <small id="subnetAddressHelp" class="form-text text-muted" ng-bind="sSubnetsHelp"></small>
         </div>
         <div class="form-group">
-            <label for="hostsPerSubnet">Number of Usable Hosts/Subnet</label>&nbsp;<span ng-hide="!bHostsCorrect" class="glyphicon glyphicon-ok" ></span>
+            <label for="hostsPerSubnet">Number of Usable Hosts/Subnet</label>&nbsp;
+            <span ng-hide="!bHostsCorrect" class="glyphicon glyphicon-ok"></span>
             <input ng-model="sHosts" class="form-control" id="hostsPerSubnet" placeholder="0" aria-describedby="hostsPerSubnetHelp">
             <small id="hostsPerSubnetHelp" class="form-text text-muted" ng-bind="sHostsHelp"></small>
         </div>
-        <p>3)
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="750" height="500" viewBox="0, 0, 750, 500">
-            <g id="RouterInternet">
-              <path d="M647.786,165 C610.151,165 579.643,195.509 579.643,233.143 C579.652,233.631 579.667,234.119 579.687,234.607 C559.62,239.767 545.586,257.851 545.571,278.571 C545.571,303.661 565.91,324 591,324 L693.214,324 C724.576,324 750,298.576 750,267.214 C749.976,243.574 735.309,222.422 713.178,214.111 C704.718,185.026 678.076,165.017 647.786,165 z M647.786,176.357 C675.253,176.36 698.78,196.021 703.662,223.05 C724.145,227.891 738.621,246.167 738.643,267.214 C738.643,292.304 718.304,312.643 693.214,312.643 L591,312.643 C572.183,312.643 556.929,297.389 556.929,278.571 C556.929,259.754 572.183,244.5 591,244.5 C591.407,244.515 591.814,244.537 592.22,244.567 C591.428,240.81 591.019,236.982 591,233.143 C591,201.781 616.424,176.357 647.786,176.357 z" fill="#000000"/>
-              <path d="M324,324.5 C283.959,324.5 251.5,292.041 251.5,252 C251.5,211.959 283.959,179.5 324,179.5 C364.041,179.5 396.5,211.959 396.5,252 C396.5,292.041 364.041,324.5 324,324.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <path d="M553.5,268 L396.5,268" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <text transform="matrix(1, 0, 0, 1, 324.04, 251.5)">
-                <tspan x="-36.04" y="8" font-family="Chalkboard" font-size="24" fill="#000000">Router</tspan>
-              </text>
-              <text transform="matrix(1, 0, 0, 1, 652.44, 251.5)">
-                <tspan x="-45.56" y="8" font-family="Chalkboard" font-size="24" fill="#000000">Internet</tspan>
-              </text>
-              <text transform="matrix(1, 0, 0, 1, 486, 251.5)">
-                <tspan x="-71" y="2" font-family="Chalkboard" font-size="18" fill="#000000" ng-bind="s3IP"></tspan>
-              </text>
-            </g>
-            <g id="NetworkH" class="{{sClass7}}">
-              <path d="M492.5,385.5 L675.5,385.5 L675.5,467.5 L492.5,467.5 L492.5,385.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <path d="M380.5,306.5 L546.5,385.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <text transform="matrix(1, 0, 0, 1, 592.5, 437.5)">
-                <tspan x="-58.593" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network H</tspan>
-                <tspan x="-58.593" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts7}} hosts)</tspan>
-              </text>
-            </g>
-            <g id="NetworkG" class="{{sClass6}}"}>
-              <path d="M283.5,382.5 L466.5,382.5 L466.5,464.5 L283.5,464.5 L283.5,382.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <path d="M334.5,324.5 L334.5,382.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <text transform="matrix(1, 0, 0, 1, 369.953, 434.5)">
-                <tspan x="-45.047" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network G</tspan>
-                <tspan x="-45.047" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts6}} hosts)</tspan>
-              </text>
-            </g>
-            <g id="NetworkF" class="{{sClass5}}">
-              <path d="M75.5,382.5 L258.5,382.5 L258.5,464.5 L75.5,464.5 L75.5,382.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <path d="M300.5,324.5 L229.5,382.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <text transform="matrix(1, 0, 0, 1, 159.5, 423)">
-                <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network F</tspan>
-                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts5}} hosts)</tspan>
-              </text>
-            </g>
-            <g id="NetworkE" class="{{sClass4}}">
-              <path d="M29.5,262.5 L212.5,262.5 L212.5,344.5 L29.5,344.5 L29.5,262.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <path d="M258.5,282.5 L217.5,303.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <text transform="matrix(1, 0, 0, 1, 110.593, 303)">
-                <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network E</tspan>
-                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts4}} hosts)</tspan>
-              </text>
-            </g>
-            <g id="NetworkD" class="{{sClass3}}">
-              <path d="M29.5,130.5 L212.5,130.5 L212.5,212.5 L29.5,212.5 L29.5,130.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <path d="M264.5,212.5 L212.5,165.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <text transform="matrix(1, 0, 0, 1, 124.093, 182.5)">
-                <tspan x="-56.093" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network D</tspan>
-                <tspan x="-56.093" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts3}} hosts)</tspan>
-              </text>
-            </g>
-            <g id="NetworkC" class="{{sClass2}}">
-                <path d="M68.5,16.5 L251.5,16.5 L251.5,98.5 L68.5,98.5 L68.5,16.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-                <text transform="matrix(1, 0, 0, 1, 166.5, 68.5)">
-                  <tspan x="-50.047" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network C</tspan>
-                  <tspan x="-50.047" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts2}} hosts)</tspan>
-                </text>
-                <path d="M288.5,192.5 L251.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              </g>
-              <g id="NetworkB" class="{{sClass1}}">
-              <path d="M278.953,16.5 L461.953,16.5 L461.953,98.5 L278.953,98.5 L278.953,16.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <path d="M348.5,185.5 L347.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <text transform="matrix(1, 0, 0, 1, 353.407, 57)">
-                <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network B</tspan>
-                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts1}} hosts)</tspan>
-              </text>
-            </g>
-            <g id="NetworkA" class="{{sClass0}}">
-              <path d="M485.5,16.5 L668.5,16.5 L668.5,98.5 L485.5,98.5 L485.5,16.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <path d="M380.5,201.5 L526.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="12"/>
-              <text transform="matrix(1, 0, 0, 1, 568.593, 57)">
-                <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network A</tspan>
-                <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts0}} hosts)</tspan>
-              </text>
-            </g>
-          </svg>     
-        </p>
-          <p>Design a subnet mask for the network shown above, with the address shown and place the information in the correct blank space.</p>
 
-         <p>   Each of the subnets above needs at least the number of hosts shown, but may support more.  DO NOT waste subnets.  The IP address for the NIC to your network is shown. 
-            
-            </p>     
-            <div class="form-group">
-                <label for="3Subnets">Number of Subnets Required</label>&nbsp;<span ng-hide="!b3SubnetsCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3Subnets" class="form-control" id="3Subnets" placeholder="0" aria-describedby="3SubnetsHelp">
-                <small id="3SubnetsHelp" class="form-text text-muted" ng-bind="s3SubnetsHelp"></small>
-            </div>
-            <div class="form-group">
-                <label for="3SubnetBits">Number of Subnet Bits</label>&nbsp;<span ng-hide="!b3SubnetBitsCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3SubnetBits" class="form-control" id="3SubnetsBits" placeholder="0" aria-describedby="3SubnetBitsHelp">
-                <small id="3SubnetBitsHelp" class="form-text text-muted" ng-bind="s3SubnetBitsHelp"></small>
-            </div>
-            <div class="form-group">
-                <label for="3HostBits">Number of Host Bits</label>&nbsp;<span ng-hide="!b3HostBitsCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3HostBits" class="form-control" id="3HostBits" placeholder="0" aria-describedby="3HostBitsHelp">
-                <small id="3HostBitsHelp" class="form-text text-muted" ng-bind="s3HostBitsHelp"></small>
-            </div>
-            <div class="form-group">
-                <label for="3defaultNetMask">Default Subnet Mask</label>&nbsp;<span ng-hide="!b3DefaultMaskCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3DefaultNetMask" class="form-control" id="3defaultNetMask" placeholder="255.255.255.255" aria-describedby="3defaultNetMaskHelp">
-                <small id="3defaultNetMaskHelp" class="form-text text-muted" ng-bind="s3DefaultNetMaskHelp"></small>
-            </div>
-            <div class="form-group">
-                <label for="3NetMask">Subnet Mask</label>&nbsp;<span ng-hide="!b3MaskCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3NetMask" class="form-control" id="3NetMask" placeholder="255.255.255.255" aria-describedby="3NetMaskHelp">
-                <small id="3NetMaskHelp" class="form-text text-muted" ng-bind="s3NetMaskHelp"></small>
-            </div>
-            <p>For Network {{s3Network}} - use the {{s3NetworkNominal}} subnet</p>
-            <div class="form-group">
-                <label for="3subnetAddress">Subnet Address</label>&nbsp;<span ng-hide="!b3SubnetCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3Subnet" class="form-control" id="3subnetAddress" placeholder="0.0.0.0" aria-describedby="3subnetAddressHelp">
-                <small id="3subnetAddressHelp" class="form-text text-muted" ng-bind="s3SubnetHelp"></small>
-            </div>
-            <div class="form-group">
-                <label for="3firstHostAddress">First Usable Host Address</label>&nbsp;<span ng-hide="!b3FirstCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3FirstUseable" class="form-control" id="3firstHostAddress" placeholder="0.0.0.0" aria-describedby="3firstHostAddressHelp">
-                <small id="3firstHostAddressHelp" class="form-text text-muted" ng-bind="s3FirstUseableHelp"></small>
-            </div>
-            <div class="form-group">
-                <label for="3lastHostAddress">Last Usable Host Address</label>&nbsp;<span ng-hide="!b3LastCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3LastUseable" class="form-control" id="3lastHostAddress" placeholder="0.0.0.0" aria-describedby="3lastHostAddressHelp">
-                <small id="3lastHostAddressHelp" class="form-text text-muted" ng-bind="s3LastUseableHelp"></small>
-            </div>
-            <div class="form-group">
-                <label for="3broadcastAddress">Broadcast Address</label>&nbsp;<span ng-hide="!b3BroadcastCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3Broadcast" class="form-control" id="3broadcastAddress" placeholder="0.0.0.0" aria-describedby="3broadcastAddressHelp">
-                <small id="3broadcastAddressHelp" class="form-text text-muted" ng-bind="s3BroadcastHelp"></small>
-            </div>
-            <div class="form-group">
-                <label for="3useSubnets">Number of Usable Subnets</label>&nbsp;<span ng-hide="!b3useSubnetsCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3useSubnets" class="form-control" id="3useSubnets" placeholder="0" aria-describedby="3useSubnetsHelp">
-                <small id="3useSubnetsHelp" class="form-text text-muted" ng-bind="s3useSubnetsHelp"></small>
-            </div>
-            <div class="form-group">
-                <label for="3hostsPerSubnet">Number of Usable Hosts/Subnet</label>&nbsp;<span ng-hide="!b3HostsCorrect" class="glyphicon glyphicon-ok" ></span>
-                <input ng-model="s3Hosts" class="form-control" id="3hostsPerSubnet" placeholder="0" aria-describedby="3hostsPerSubnetHelp">
-                <small id="3hostsPerSubnetHelp" class="form-text text-muted" ng-bind="s3HostsHelp"></small>
-            </div>
-            <p class="pull-right" ng-bind="sMark"></p>
+        <!-- Question 2-->
+        
+        <p>2) Address: {{s2IP}} Subnet Mask: You need {{n2Nets}} {{s2SubnetsOrHosts}} with as many {{s2HostsOrSubnets}} as possible.
+        </p>
+        <p> For the address and subnet mask condition shown above, calculate the information listed below for the {{s2NetworkNominal}} available subnet.
+        </p>
+        
+        <div class="form-group">
+            <label for="2NetMask">Subnet Mask</label>&nbsp;
+            <span ng-hide="!b2MaskCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s2NetMask" class="form-control" id="2NetMask" placeholder="255.255.255.255" aria-describedby="2NetMaskHelp">
+            <small id="2NetMaskHelp" class="form-text text-muted" ng-bind="s2NetMaskHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="2subnetAddress">Subnet Address</label>&nbsp;
+            <span ng-hide="!b2SubnetAddressCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s2Subnet" class="form-control" id="2subnetAddress" placeholder="0.0.0.0" aria-describedby="2subnetAddressHelp">
+            <small id="2subnetAddressHelp" class="form-text text-muted" ng-bind="s2SubnetAddressHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="2firstHostAddress">First Usable Host Address</label>&nbsp;
+            <span ng-hide="!b2FirstCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s2FirstUseable" class="form-control" id="2firstHostAddress" placeholder="0.0.0.0" aria-describedby="2firstHostAddressHelp">
+            <small id="2firstHostAddressHelp" class="form-text text-muted" ng-bind="s2FirstUseableHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="2lastHostAddress">Last Usable Host Address</label>&nbsp;
+            <span ng-hide="!b2LastCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s2LastUseable" class="form-control" id="2lastHostAddress" placeholder="0.0.0.0" aria-describedby="2lastHostAddressHelp">
+            <small id="2lastHostAddressHelp" class="form-text text-muted" ng-bind="s2LastUseableHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="2broadcastAddress">Broadcast Address</label>&nbsp;
+            <span ng-hide="!b2BroadcastCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s2Broadcast" class="form-control" id="2broadcastAddress" placeholder="0.0.0.0" aria-describedby="2broadcastAddressHelp">
+            <small id="2broadcastAddressHelp" class="form-text text-muted" ng-bind="s2BroadcastHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="2useSubnets">Number of Usable Subnets</label>&nbsp;
+            <span ng-hide="!b2useSubnetsCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s2useSubnets" class="form-control" id="2useSubnets" placeholder="0" aria-describedby="2useSubnetsHelp">
+            <small id="2useSubnetsHelp" class="form-text text-muted" ng-bind="s2useSubnetsHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="2hostsPerSubnet">Number of Usable Hosts/Subnet</label>&nbsp;
+            <span ng-hide="!b2HostsCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s2Hosts" class="form-control" id="2hostsPerSubnet" placeholder="0" aria-describedby="2hostsPerSubnetHelp">
+            <small id="2hostsPerSubnetHelp" class="form-text text-muted" ng-bind="s2HostsHelp"></small>
+        </div>
+ 
+       
+
+        <!-- Question 3-->
+        <p>3)
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="750"
+                height="500" viewBox="0, 0, 750, 500">
+                <g id="RouterInternet">
+                    <path d="M647.786,165 C610.151,165 579.643,195.509 579.643,233.143 C579.652,233.631 579.667,234.119 579.687,234.607 C559.62,239.767 545.586,257.851 545.571,278.571 C545.571,303.661 565.91,324 591,324 L693.214,324 C724.576,324 750,298.576 750,267.214 C749.976,243.574 735.309,222.422 713.178,214.111 C704.718,185.026 678.076,165.017 647.786,165 z M647.786,176.357 C675.253,176.36 698.78,196.021 703.662,223.05 C724.145,227.891 738.621,246.167 738.643,267.214 C738.643,292.304 718.304,312.643 693.214,312.643 L591,312.643 C572.183,312.643 556.929,297.389 556.929,278.571 C556.929,259.754 572.183,244.5 591,244.5 C591.407,244.515 591.814,244.537 592.22,244.567 C591.428,240.81 591.019,236.982 591,233.143 C591,201.781 616.424,176.357 647.786,176.357 z"
+                        fill="#000000" />
+                    <path d="M324,324.5 C283.959,324.5 251.5,292.041 251.5,252 C251.5,211.959 283.959,179.5 324,179.5 C364.041,179.5 396.5,211.959 396.5,252 C396.5,292.041 364.041,324.5 324,324.5 z"
+                        fill-opacity="0" stroke="#000000" stroke-width="12" />
+                    <path d="M553.5,268 L396.5,268" fill-opacity="0" stroke="#000000" stroke-width="12" />
+                    <text transform="matrix(1, 0, 0, 1, 324.04, 251.5)">
+                        <tspan x="-36.04" y="8" font-family="Chalkboard" font-size="24" fill="#000000">Router</tspan>
+                    </text>
+                    <text transform="matrix(1, 0, 0, 1, 652.44, 251.5)">
+                        <tspan x="-45.56" y="8" font-family="Chalkboard" font-size="24" fill="#000000">Internet</tspan>
+                    </text>
+                    <text transform="matrix(1, 0, 0, 1, 486, 251.5)">
+                        <tspan x="-71" y="2" font-family="Chalkboard" font-size="18" fill="#000000" ng-bind="s3IP"></tspan>
+                    </text>
+                </g>
+                <g id="NetworkH" class="{{sClass7}}">
+                    <path d="M492.5,385.5 L675.5,385.5 L675.5,467.5 L492.5,467.5 L492.5,385.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"
+                    />
+                    <path d="M380.5,306.5 L546.5,385.5" fill-opacity="0" stroke="#000000" stroke-width="12" />
+                    <text transform="matrix(1, 0, 0, 1, 592.5, 437.5)">
+                        <tspan x="-58.593" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network H</tspan>
+                        <tspan x="-58.593" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts7}} hosts)</tspan>
+                    </text>
+                </g>
+                <g id="NetworkG" class="{{sClass6}}" }>
+                    <path d="M283.5,382.5 L466.5,382.5 L466.5,464.5 L283.5,464.5 L283.5,382.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"
+                    />
+                    <path d="M334.5,324.5 L334.5,382.5" fill-opacity="0" stroke="#000000" stroke-width="12" />
+                    <text transform="matrix(1, 0, 0, 1, 369.953, 434.5)">
+                        <tspan x="-45.047" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network G</tspan>
+                        <tspan x="-45.047" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts6}} hosts)</tspan>
+                    </text>
+                </g>
+                <g id="NetworkF" class="{{sClass5}}">
+                    <path d="M75.5,382.5 L258.5,382.5 L258.5,464.5 L75.5,464.5 L75.5,382.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"
+                    />
+                    <path d="M300.5,324.5 L229.5,382.5" fill-opacity="0" stroke="#000000" stroke-width="12" />
+                    <text transform="matrix(1, 0, 0, 1, 159.5, 423)">
+                        <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network F</tspan>
+                        <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts5}} hosts)</tspan>
+                    </text>
+                </g>
+                <g id="NetworkE" class="{{sClass4}}">
+                    <path d="M29.5,262.5 L212.5,262.5 L212.5,344.5 L29.5,344.5 L29.5,262.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"
+                    />
+                    <path d="M258.5,282.5 L217.5,303.5" fill-opacity="0" stroke="#000000" stroke-width="12" />
+                    <text transform="matrix(1, 0, 0, 1, 110.593, 303)">
+                        <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network E</tspan>
+                        <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts4}} hosts)</tspan>
+                    </text>
+                </g>
+                <g id="NetworkD" class="{{sClass3}}">
+                    <path d="M29.5,130.5 L212.5,130.5 L212.5,212.5 L29.5,212.5 L29.5,130.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"
+                    />
+                    <path d="M264.5,212.5 L212.5,165.5" fill-opacity="0" stroke="#000000" stroke-width="12" />
+                    <text transform="matrix(1, 0, 0, 1, 124.093, 182.5)">
+                        <tspan x="-56.093" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network D</tspan>
+                        <tspan x="-56.093" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts3}} hosts)</tspan>
+                    </text>
+                </g>
+                <g id="NetworkC" class="{{sClass2}}">
+                    <path d="M68.5,16.5 L251.5,16.5 L251.5,98.5 L68.5,98.5 L68.5,16.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"
+                    />
+                    <text transform="matrix(1, 0, 0, 1, 166.5, 68.5)">
+                        <tspan x="-50.047" y="-17.5" font-family="Chalkboard" font-size="18" fill="#000000">Network C</tspan>
+                        <tspan x="-50.047" y="5.5" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts2}} hosts)</tspan>
+                    </text>
+                    <path d="M288.5,192.5 L251.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="12" />
+                </g>
+                <g id="NetworkB" class="{{sClass1}}">
+                    <path d="M278.953,16.5 L461.953,16.5 L461.953,98.5 L278.953,98.5 L278.953,16.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"
+                    />
+                    <path d="M348.5,185.5 L347.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="12" />
+                    <text transform="matrix(1, 0, 0, 1, 353.407, 57)">
+                        <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network B</tspan>
+                        <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts1}} hosts)</tspan>
+                    </text>
+                </g>
+                <g id="NetworkA" class="{{sClass0}}">
+                    <path d="M485.5,16.5 L668.5,16.5 L668.5,98.5 L485.5,98.5 L485.5,16.5 z" fill-opacity="0" stroke="#000000" stroke-width="12"
+                    />
+                    <path d="M380.5,201.5 L526.5,98.5" fill-opacity="0" stroke="#000000" stroke-width="12" />
+                    <text transform="matrix(1, 0, 0, 1, 568.593, 57)">
+                        <tspan x="-42.593" y="-6" font-family="Chalkboard" font-size="18" fill="#000000">Network A</tspan>
+                        <tspan x="-42.593" y="17" font-family="Chalkboard" font-size="18" fill="#000000">({{nHosts0}} hosts)</tspan>
+                    </text>
+                </g>
+            </svg>
+        </p>
+        <p>Design a subnet mask for the network shown above, with the address shown and place the information in the correct
+            blank space.</p>
+
+        <p> Each of the subnets above needs at least the number of hosts shown, but may support more. DO NOT waste subnets. The
+            IP address for the NIC to your network is shown.
+
+        </p>
+        <div class="form-group">
+            <label for="3Subnets">Number of Subnets Required</label>&nbsp;
+            <span ng-hide="!b3SubnetsCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3Subnets" class="form-control" id="3Subnets" placeholder="0" aria-describedby="3SubnetsHelp">
+            <small id="3SubnetsHelp" class="form-text text-muted" ng-bind="s3SubnetsHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="3SubnetBits">Number of Subnet Bits</label>&nbsp;
+            <span ng-hide="!b3SubnetBitsCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3SubnetBits" class="form-control" id="3SubnetsBits" placeholder="0" aria-describedby="3SubnetBitsHelp">
+            <small id="3SubnetBitsHelp" class="form-text text-muted" ng-bind="s3SubnetBitsHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="3HostBits">Number of Host Bits</label>&nbsp;
+            <span ng-hide="!b3HostBitsCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3HostBits" class="form-control" id="3HostBits" placeholder="0" aria-describedby="3HostBitsHelp">
+            <small id="3HostBitsHelp" class="form-text text-muted" ng-bind="s3HostBitsHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="3defaultNetMask">Default Subnet Mask</label>&nbsp;
+            <span ng-hide="!b3DefaultMaskCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3DefaultNetMask" class="form-control" id="3defaultNetMask" placeholder="255.255.255.255" aria-describedby="3defaultNetMaskHelp">
+            <small id="3defaultNetMaskHelp" class="form-text text-muted" ng-bind="s3DefaultNetMaskHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="3NetMask">Subnet Mask</label>&nbsp;
+            <span ng-hide="!b3MaskCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3NetMask" class="form-control" id="3NetMask" placeholder="255.255.255.255" aria-describedby="3NetMaskHelp">
+            <small id="3NetMaskHelp" class="form-text text-muted" ng-bind="s3NetMaskHelp"></small>
+        </div>
+        <p>For Network {{s3Network}} - use the {{s3NetworkNominal}} subnet</p>
+        <div class="form-group">
+            <label for="3subnetAddress">Subnet Address</label>&nbsp;
+            <span ng-hide="!b3SubnetCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3Subnet" class="form-control" id="3subnetAddress" placeholder="0.0.0.0" aria-describedby="3subnetAddressHelp">
+            <small id="3subnetAddressHelp" class="form-text text-muted" ng-bind="s3SubnetHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="3firstHostAddress">First Usable Host Address</label>&nbsp;
+            <span ng-hide="!b3FirstCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3FirstUseable" class="form-control" id="3firstHostAddress" placeholder="0.0.0.0" aria-describedby="3firstHostAddressHelp">
+            <small id="3firstHostAddressHelp" class="form-text text-muted" ng-bind="s3FirstUseableHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="3lastHostAddress">Last Usable Host Address</label>&nbsp;
+            <span ng-hide="!b3LastCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3LastUseable" class="form-control" id="3lastHostAddress" placeholder="0.0.0.0" aria-describedby="3lastHostAddressHelp">
+            <small id="3lastHostAddressHelp" class="form-text text-muted" ng-bind="s3LastUseableHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="3broadcastAddress">Broadcast Address</label>&nbsp;
+            <span ng-hide="!b3BroadcastCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3Broadcast" class="form-control" id="3broadcastAddress" placeholder="0.0.0.0" aria-describedby="3broadcastAddressHelp">
+            <small id="3broadcastAddressHelp" class="form-text text-muted" ng-bind="s3BroadcastHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="3useSubnets">Number of Usable Subnets</label>&nbsp;
+            <span ng-hide="!b3useSubnetsCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3useSubnets" class="form-control" id="3useSubnets" placeholder="0" aria-describedby="3useSubnetsHelp">
+            <small id="3useSubnetsHelp" class="form-text text-muted" ng-bind="s3useSubnetsHelp"></small>
+        </div>
+        <div class="form-group">
+            <label for="3hostsPerSubnet">Number of Usable Hosts/Subnet</label>&nbsp;
+            <span ng-hide="!b3HostsCorrect" class="glyphicon glyphicon-ok"></span>
+            <input ng-model="s3Hosts" class="form-control" id="3hostsPerSubnet" placeholder="0" aria-describedby="3hostsPerSubnetHelp">
+            <small id="3hostsPerSubnetHelp" class="form-text text-muted" ng-bind="s3HostsHelp"></small>
+        </div>
+        <p class="pull-right" ng-bind="sMark"></p>
         <button type="submit">"Mark" this</button>
         <button type="button" ng-click="fInit()">New problem</button>
     </form>
