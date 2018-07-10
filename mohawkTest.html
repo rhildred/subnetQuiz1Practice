@@ -226,7 +226,7 @@
                     if ($scope.s2NetMask == sSubnetMask) {
                         nMark++;
                         $scope.s2NetMaskHelp = "";
-                        $scope.b2MaskCorrect = true;
+                        $scope.b2NetMaskCorrect = true;
                     } else {
                         $scope.s2NetMaskHelp = "The net mask is calculated by turning on all of the network bits from the left.";
                     }
@@ -245,7 +245,7 @@
                     }
                     if(n2LastOctet > 255){
                         //class b (&c) carry
-                        var n23 = $scope.n2Octet3 + Math.floor(n2LastOctet / 256);
+                        var n23 = Math.floor(n2LastOctet / 256);
                         var n24 = n2LastOctet % 256;
                         if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
                             $scope.s2SubnetAddressHelp = "Please be careful to copy the first 2 network bytes from the IP address";
@@ -273,8 +273,8 @@
 
                     } else {
                         //class c'ish
-                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2 || nAns3 != $scope.n2Octet3) {
-                            $scope.s2SubnetAddressHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2SubnetAddressHelp = "Please be careful to copy the first 2 network bytes from the IP address";
                         } else if (nAns4 != n2LastOctet) {
                             $scope.s2SubnetAddressHelp = "The subnet is calculated by adding the least significant bit until we get to the " + $scope.s2NetworkNominal + " .";
                         } else {
@@ -298,7 +298,7 @@
                     }
                     if(n2LastOctet > 255){
                         //class b (&c) carry
-                        var n23 = $scope.n2Octet3 + Math.floor(n2LastOctet / 256);
+                        var n23 = Math.floor(n2LastOctet / 256);
                         var n24 = n2LastOctet % 256 + 1;
                         if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
                             $scope.s2FirstUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
@@ -326,8 +326,8 @@
 
                     } else {
                         //class c'ish
-                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2 || nAns3 != $scope.n2Octet3) {
-                            $scope.s2FirstUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2FirstUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
                         } else if (nAns4 != n2LastOctet + 1) {
                             $scope.s2FirstUseableHelp = "The first available host is the subnet + 1";
                         } else {
@@ -351,7 +351,7 @@
                     }
                     if(n2LastOctet > 255){
                         //class b (&c) carry
-                        var n23 = $scope.n2Octet3 + Math.floor(n2LastOctet / 256);
+                        var n23 = Math.floor(n2LastOctet / 256);
                         var n24 = n2LastOctet % 256;
                         if(n24 ==0){
                             //borrow
@@ -386,8 +386,8 @@
 
                     } else {
                         //class c'ish
-                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2 || nAns3 != $scope.n2Octet3) {
-                            $scope.s2LastUseableHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2LastUseableHelp = "Please be careful to copy the first 2 network bytes from the IP address";
                         } else if (nAns4 != n2LastOctet -2) {
                             $scope.s2LastUseableHelp = "The first available host is the subnet + 1";
                         } else {
@@ -411,11 +411,11 @@
                     }
                     if(n2LastOctet > 255){
                         //class b (&c) carry
-                        var n23 = $scope.n2Octet3 + Math.floor(n2LastOctet / 256);
+                        var n23 = Math.floor(n2LastOctet / 256);
                         var n24 = n2LastOctet % 256;
                         if(n24 ==0){
                             //borrow
-                            n24 = 254;
+                            n24 = 255;
                             n23--;
                         }else{
                             n24 -= 1;
@@ -446,8 +446,8 @@
 
                     } else {
                         //class c'ish
-                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2 || nAns3 != $scope.n2Octet3) {
-                            $scope.s2BroadcastHelp = "Please be careful to copy the first 3 network bytes from the IP address";
+                        if (nAns1 != $scope.n2Octet1 || nAns2 != $scope.n2Octet2) {
+                            $scope.s2BroadcastHelp = "Please be careful to copy the first 2 network bytes from the IP address";
                         } else if (nAns4 != n2LastOctet -1) {
                             $scope.s2BroadcastHelp = "The first available host is the subnet + 1";
                         } else {
@@ -727,7 +727,7 @@
                     // Question 3
                     $scope.s3DefaultNetMask = "";
                     $scope.s3DefaultNetMaskHelp = "";
-                    $scope.b3MaskCorrect = false;
+                    $scope.b3DefaultMaskCorrect = false;
                     $scope.s3Subnet = "";
                     $scope.s3SubnetHelp = "";
                     $scope.b3SubnetCorrect = false;
@@ -739,7 +739,7 @@
                     $scope.b3HostBitsCorrect = false;
                     $scope.s3NetMask = "";
                     $scope.s3NetMaskHelp = "";
-                    $scope.b3NetMaskCorrect = false;
+                    $scope.b3MaskCorrect = false;
                     $scope.s3FirstUseable = "";
                     $scope.s3FirstUseableHelp = "";
                     $scope.b3FirstCorrect = false;
@@ -751,7 +751,7 @@
                     $scope.b3BroadcastCorrect = false;
                     $scope.s3Subnets = "";
                     $scope.s3SubnetsHelp = "";
-                    $scope.b3NetsCorrect = false;
+                    $scope.b3SubnetsCorrect = false;
                     $scope.s3useSubnets = "";
                     $scope.s3useSubnetsHelp = "";
                     $scope.b3useSubnetsCorrect = false;
@@ -862,7 +862,7 @@
         
         <div class="form-group">
             <label for="2NetMask">Subnet Mask</label>&nbsp;
-            <span ng-hide="!b2MaskCorrect" class="glyphicon glyphicon-ok"></span>
+            <span ng-hide="!b2NetMaskCorrect" class="glyphicon glyphicon-ok"></span>
             <input ng-model="s2NetMask" class="form-control" id="2NetMask" placeholder="255.255.255.255" aria-describedby="2NetMaskHelp">
             <small id="2NetMaskHelp" class="form-text text-muted" ng-bind="s2NetMaskHelp"></small>
         </div>
